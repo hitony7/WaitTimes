@@ -15,7 +15,7 @@ This project was started using the [React + Rails Boilerplate](https://github.co
 
 5. Once your feature/fix is complete (with one or more commits), push it to a new remote branch: `git push -u origin feature/<new-feature-name>`
 
-6. Submit a pull request on Github for your remote branch to be merged into the remote master branch. Russell will review and approve for quality control.
+6. Submit a pull request on Github for your remote branch to be merged into the remote master branch with Russell (@rmcwhae) as the reviewer. Russell will review and merge the branch.
 
 ___
 
