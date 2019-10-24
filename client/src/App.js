@@ -6,7 +6,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message: 'Click the button to load data!'
+      message: 'Welcome to VisitER! Click the button below to load data!'
     }
   }
 
