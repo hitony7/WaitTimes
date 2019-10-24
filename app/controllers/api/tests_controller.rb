@@ -1,7 +1,7 @@
 class Api::TestsController < ApplicationController
   def index
     render :json => {
-      message: "hello!"
+      message: "Hello from the rails server!"
     }
   end
 end
