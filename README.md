@@ -5,17 +5,21 @@ This project was started using the [React + Rails Boilerplate](https://github.co
 
 # Pull Requests
 
+Please follow this procedure to add your code to the repository:
+
 1. When working on a new feature or bugfix, checkout the repo to your local machine first: `git clone git@github.com:hitony7/WaitTimes.git` then `cd` into the `WaitTimes` folder. If you already have a local version, be sure to run `git pull` when on your local master branch to receive the latest updates from the remote master branch.
 
 2. Install dependencies as below in "Using the boilerplate" if you haven't already.
 
-3. Create a new local branch: `git checkout -b feature/<new-feature-name>`.
+3. Create a new local branch: `git checkout -b feature/<new-feature-name>` (`-b` option creates a new branch).
 
 4. Commit working changes to your local branch as you implement features/fixes. Commit often as long as things are working. These changes are saved locally only so far (not yet remotely).
 
 5. Once your feature/fix is complete (with one or more commits), push it to a new remote branch: `git push -u origin feature/<new-feature-name>`
 
 6. Submit a pull request on Github for your remote branch to be merged into the remote master branch with Russell (@rmcwhae) as the reviewer. Russell will review and merge the branch.
+
+7. Before working on a new branch, always switch back to your local master branch: `git checkout master` and `git pull` to grab the latest remote changes.
 
 ___
 
