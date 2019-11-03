@@ -32,4 +32,31 @@ EmergencyRoom.create!(
 
 p "Created #{EmergencyRoom.count} Emergency Rooms!"
 
+## USERS
+
+User.destroy_all
+
+parent1 = User.new(
+  first_name: 'Bob',
+  last_name: 'Smith',
+  email: 'bob@smith.com',
+  phone: '1234567',
+  password: 'password',
+  role: 'caregiver'
+)
+parent1.hash_password
+parent1.save
+nurse1 = User.new(
+  first_name: 'Nurse',
+  last_name: 'Jackie',
+  email: 'jackie@ahs.com',
+  phone: '1234567',
+  password: 'password',
+  role: 'triage_staff'
+)
+nurse1.hash_password
+nurse1.save
+
+p "Created #{User.count} users!"
+
 puts 'DONE!'
