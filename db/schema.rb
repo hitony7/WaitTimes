@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_03_004226) do
+ActiveRecord::Schema.define(version: 2019_11_03_012657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "emergency_room_visits", force: :cascade do |t|
+    t.string "visit_description"
+    t.integer "given_wait_time_minutes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "emergency_rooms", force: :cascade do |t|
     t.string "hospital_name"
