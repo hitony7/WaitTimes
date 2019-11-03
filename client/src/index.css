@@ -12,3 +12,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+h1 {
+  color: DodgerBlue;
+}
+
+h1 span {
+  color: crimson;
+}
