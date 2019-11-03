@@ -7,7 +7,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-puts 'Seeding Data ...'
+p 'Seeding Data ...'
 
 # Only run on development (local) instances not on production, etc.
 unless Rails.env.development?
@@ -59,4 +59,21 @@ nurse1.save
 
 p "Created #{User.count} users!"
 
-puts 'DONE!'
+## Triage Questions
+
+TriageQuestion.destroy_all
+
+TriageQuestion.create!(
+  question_text: 'Is your child\'s temperature over 39 degrees Celcius?'
+)
+TriageQuestion.create!(
+  question_text: 'Is your child showing any signs of rashing on their face?'
+)
+TriageQuestion.create!(
+  question_text: 'Is your child able to breathe normally?'
+)
+# fill these out properly once available...
+
+p "Created #{TriageQuestion.count} triage questions!"
+
+p 'DONE!'
