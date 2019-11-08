@@ -17,7 +17,7 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: rails_project_development
+  database: visit_er_development
   pool: 5
   username:
   password:
@@ -47,7 +47,7 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: rails_project_test
+  database: visit_er_test
   pool: 5
   username:
   password:

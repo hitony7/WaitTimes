@@ -1,0 +1,2 @@
+class TriageQuestion < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class EmergencyRoomVisit < ApplicationRecord
+end
