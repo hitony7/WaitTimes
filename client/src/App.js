@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import Cookies from 'universal-cookie';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import 'antd/dist/antd.css';
+import { Button } from 'antd';
 
 const cookies = new Cookies();
 
@@ -42,7 +44,7 @@ class App extends Component {
           Visit<span>ER</span>
         </h1>
         <h2>{this.state.message}</h2>
-        <button onClick={this.fetchData}>Fetch Data</button>
+        <Button onClick={this.fetchData}>Fetch Data</Button>
       </div>
     );
   }
