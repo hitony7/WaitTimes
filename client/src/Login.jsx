@@ -15,66 +15,64 @@ class Login extends Component {
   //   }
   // }
 
-  // handleSubmit = e => {
-  //   e.preventDefault();
-  //   this.props.form.validateFields((err, values) => {
-  //     if (!err) {
-  //       this.props.cookies.set("email", values.email, { path: '/' })
-  //       this.props.setUser(this.props.cookies.get('email'))
-  //       this.setState({ redirect: true })
-  //       axios.post('/api/users', { email: this.props.cookies.get('email') })
-  //     }
-  //   });
-  // };
-
-  login() {
-    const email = $("#email").val();
-    const password = $("#password").val();
-    const request = { "auth": { "email": email, "password": password } };
-    console.log(request);
-    axios.post('api/user_token', request).then((response) => {
-      console.log(response);
-      localStorage.setItem("jwt", response.jwt)
+  login = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        // this.props.cookies.set("email", values.email, { path: '/' })
+        // this.props.setUser(this.props.cookies.get('email'))
+        // this.setState({redirect:true})
+        // axios.post('/api/users', {email: this.props.cookies.get('email')})
+        const request = { "auth": { "email": values.email, "password": values.password } };
+        console.log(request);
+        axios.post('api/user_token', request).then((response) => {
+          console.log(response);
+          localStorage.setItem("jwt", response.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
+        });
+      }
     });
-    // $.ajax({
-    //   url: "http://localhost:3000/api/user_token",
-    //   type: "POST",
-    //   data: request,
-    //   dataType: "json",
-    //   success: function (result) {
-    //     console.log(result)
-    //     localStorage.setItem("jwt", result.jwt)
-    //   }
-    // })
-  }
+
+  };
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     return (
-      <div className="App">
-        <Form>
-          <label htmlFor="email">Email: </label>
-          <br />
-          <Input
-            name="email"
-            id="email"
-            type="email"
-          />
-          <br /><br />
-          <label htmlFor="password">Password:</label>
-          <br />
-          <Input
-            name="password"
-            id="password"
-            type="password"
-          />
-        </Form>
-        <br />
-        <Button
-          onClick={this.login}
-        >
-          Login
+      <div className="sign-in">
+        <h2>Sign In</h2>
+        <Form onSubmit={this.login} className="login-form">
+          <Form.Item>
+            {getFieldDecorator('email', {
+              rules: [{ required: true, message: 'Please input your email!' }],
+            })(
+              <Input
+                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                name="email"
+                id="email"
+                type="email"
+                placeholder="E-mail address"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator('password', {
+              rules: [{ required: true, message: 'Please input your password!' }],
+            })(
+              <Input
+                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                name="password"
+                id="password"
+                type="password"
+                placeholder="Password"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button htmlType="submit">
+              Login
           </Button>
-        <br />
+          </Form.Item>
+        </Form>
+
         <p>{this.state}</p>
       </div>
     );
