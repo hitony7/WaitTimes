@@ -5,6 +5,9 @@ import Cookies from 'universal-cookie';
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Button } from 'antd';
+import Login from './Login.jsx';
+import $ from 'jquery';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 const cookies = new Cookies();
 
@@ -39,13 +42,21 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <h1>
-          Visit<span>ER</span>
-        </h1>
-        <h2>{this.state.message}</h2>
-        <Button onClick={this.fetchData}>Fetch Data</Button>
-      </div>
+      <Router>
+        <div className="App">
+          <h1>
+            Visit<span>ER</span>
+          </h1>
+          <h2>{this.state.message}</h2>
+          <Button onClick={this.fetchData}>Fetch Data</Button>
+          <Route
+            path="/"
+            render={props => (
+              <Login {...props} setUser={this.setUser} cookies={cookies} />
+            )}
+          />
+        </div>
+      </Router>
     );
   }
 }
