@@ -6,9 +6,6 @@ import axios from 'axios';
 
 class Login extends Component {
 
-  // state = {
-  //   redirect: false
-  // }
   // componentDidUpdate() {
   //   if (this.state.redirect) {
   //     this.setState({ redirect: false })
@@ -30,6 +27,7 @@ class Login extends Component {
             console.log(response);
             console.log(response.data.jwt);
             localStorage.setItem("jwt", response.data.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
+            this.props.setUser(values.email);
           })
           .catch(function (error) {
             console.log(error);

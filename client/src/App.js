@@ -16,7 +16,9 @@ class App extends Component {
     super(props);
     this.state = {
       message: 'Welcome to VisitER! Click the button below to load data!',
-      email: cookies.get('email')
+      loggedInStatus: "NOT_LOGGED_IN",
+      email: '',
+      jwt_token: localStorage.getItem("jwt")
     };
   }
 
@@ -24,6 +26,7 @@ class App extends Component {
     this.setState({ email: email }, () =>
       console.log('Current state after setting user', this.state)
     );
+    this.setState({ loggedInStatus: "LOGGED_IN" });
   };
 
   fetchData = () => {
