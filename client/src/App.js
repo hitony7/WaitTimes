@@ -1,63 +1,72 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import './App.css';
-import Cookies from 'universal-cookie';
+// import Cookies from 'universal-cookie';
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Button } from 'antd';
 import Login from './Login.jsx';
-import $ from 'jquery';
+import Admin from './Admin.jsx';
+// import $ from 'jquery';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-const cookies = new Cookies();
+// const cookies = new Cookies();
+const LOGGED_IN = 'LOGGED_IN';
+const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
+let jwt_token = localStorage.getItem("jwt");
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      message: 'Welcome to VisitER! Click the button below to load data!',
-      loggedInStatus: "NOT_LOGGED_IN",
+      loggedInStatus: jwt_token ? LOGGED_IN : NOT_LOGGED_IN,
       email: '',
-      jwt_token: localStorage.getItem("jwt")
     };
   }
+
 
   setUser = email => {
     this.setState({ email: email }, () =>
       console.log('Current state after setting user', this.state)
     );
-    this.setState({ loggedInStatus: "LOGGED_IN" });
+    this.setState({ loggedInStatus: LOGGED_IN });
   };
 
-  fetchData = () => {
-    axios
-      .get('/api/data') // You can simply make your requests to "/api/whatever you want"
-      .then(response => {
-        // handle success
-        console.log(response.data); // The entire response from the Rails API
-
-        console.log(response.data.message); // Just the message
-        this.setState({
-          message: response.data.message
-        });
-      });
-  };
+  handleClick = event => {
+    event.preventDefault()
+    // Remove the token from localStorage
+    localStorage.removeItem("jwt");
+    // Update the state
+    this.setState({ loggedInStatus: NOT_LOGGED_IN, email: '' });
+  }
 
   render() {
     return (
       <Router>
-        <div className="App">
-          <h1>
+        <nav className="navbar">
+          <div className="navbar-left"><h1>
             Visit<span>ER</span>
-          </h1>
-          <h2>{this.state.message}</h2>
-          <Button onClick={this.fetchData}>Fetch Data</Button>
-          <Route
-            path="/"
-            render={props => (
-              <Login {...props} setUser={this.setUser} cookies={cookies} />
-            )}
-          />
+          </h1></div>
+          <div className="navbar-right">{(this.state.loggedInStatus === LOGGED_IN)
+            ? <Button onClick={this.handleClick}>Log Out</Button>
+            : null
+          }</div>
+        </nav>
+        <div className="App">
+
+          <Switch>
+            <Route
+              path="/admin"
+              render={(props) => <Admin {...props} />}
+            />
+            <Route
+              path="/"
+              render={props => (
+                <Login {...props} setUser={this.setUser} />
+              )}
+            />
+          </Switch>
         </div>
       </Router>
     );

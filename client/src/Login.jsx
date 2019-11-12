@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Alert } from 'antd';
+import { Form, Icon, Input, Button } from 'antd';
 import { Redirect } from "react-router-dom";
-import $ from 'jquery';
+// import $ from 'jquery';
 import axios from 'axios';
 
 class Login extends Component {
 
+  state = {
+    redirect: false
+  }
   // componentDidUpdate() {
   //   if (this.state.redirect) {
   //     this.setState({ redirect: false })
@@ -24,12 +27,13 @@ class Login extends Component {
         console.log(requestJSONobj);
         axios.post('api/user_token', requestJSONobj)
           .then((response) => {
-            console.log(response);
-            console.log(response.data.jwt);
+            // console.log(response);
             localStorage.setItem("jwt", response.data.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
-            this.props.setUser(values.email);
+            this.props.setUser(values.email); // set the user's email in the React state
+            this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })
           .catch(function (error) {
+            window.alert('Error: Incorrect credentials');
             console.log(error);
           });
       }
@@ -39,6 +43,9 @@ class Login extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    if (this.state.redirect) {
+      return (<Redirect to='/admin' />)
+    }
     return (
       <div className="sign-in">
         <h2>Sign In</h2>
@@ -76,7 +83,6 @@ class Login extends Component {
           </Form.Item>
         </Form>
 
-        <p>{this.state}</p>
       </div>
     );
   }
