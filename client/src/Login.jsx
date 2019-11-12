@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
@@ -48,6 +48,11 @@ class Login extends Component {
     }
     return (
       <div className="sign-in">
+        <Alert
+          message="Warning: If this is a real emergency, do not use this app but instead dial 911!"
+          type="error"
+        />
+        <p className="welcome-para">Welcome to VisitER. Please sign in below.</p>
         <h2>Sign In</h2>
         <Form onSubmit={this.login} className="login-form">
           <Form.Item>

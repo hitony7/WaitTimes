@@ -33,6 +33,26 @@
 }
 
 .sign-in {
-  width: 50%;
-  margin: 2em auto;
+  margin: 1em;
+}
+
+nav.navbar {
+  /* could optimize for responsive layouts...*/
+  padding: 1em;
+  display: flex;
+}
+
+.navbar-right {
+  margin-left: auto;
+}
+
+.welcome-para {
+  margin-top: 2em;
+}
+
+@media only screen and (min-width: 768px) {
+  .sign-in {
+    width: 50%;
+    margin: 2em auto;
+  }
 }
