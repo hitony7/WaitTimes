@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
 import $ from 'jquery';
 import axios from 'axios';
@@ -23,12 +23,17 @@ class Login extends Component {
         // this.props.setUser(this.props.cookies.get('email'))
         // this.setState({redirect:true})
         // axios.post('/api/users', {email: this.props.cookies.get('email')})
-        const request = { "auth": { "email": values.email, "password": values.password } };
-        console.log(request);
-        axios.post('api/user_token', request).then((response) => {
-          console.log(response);
-          localStorage.setItem("jwt", response.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
-        });
+        const requestJSONobj = { "auth": { "email": values.email, "password": values.password } };
+        console.log(requestJSONobj);
+        axios.post('api/user_token', requestJSONobj)
+          .then((response) => {
+            console.log(response);
+            console.log(response.data.jwt);
+            localStorage.setItem("jwt", response.data.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
     });
 
