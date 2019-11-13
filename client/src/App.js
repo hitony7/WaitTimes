@@ -9,6 +9,7 @@ import Login from './Login.jsx';
 import Admin from './Admin.jsx';
 // import $ from 'jquery';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 
 // const cookies = new Cookies();
 const LOGGED_IN = 'LOGGED_IN';
@@ -33,7 +34,7 @@ class App extends Component {
     this.setState({ loggedInStatus: LOGGED_IN });
   };
 
-  handleClick = event => {
+  logout = event => {
     event.preventDefault()
     // Remove the token from localStorage
     localStorage.removeItem("jwt");
@@ -49,16 +50,15 @@ class App extends Component {
             Visit<span>ER</span>
           </h1></div>
           <div className="navbar-right">{(this.state.loggedInStatus === LOGGED_IN)
-            ? <Button onClick={this.handleClick}>Log Out</Button>
-            : null
+            ? <Button onClick={this.logout}>Log Out</Button>
+            : <Button>Register</Button>
           }</div>
         </nav>
         <div className="App">
-
           <Switch>
             <Route
               path="/admin"
-              render={(props) => <Admin {...props} />}
+              render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Redirect to='/' /> : <Admin {...props} />}
             />
             <Route
               path="/"
