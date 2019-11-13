@@ -3,6 +3,24 @@ HealthHack 2019 Group 1
 
 This project was started using the [React + Rails Boilerplate](https://github.com/NimaBoscarino/react-rails-boilerplate) from Nima Boscarino. This is the single repository required for this project, though two terminals are required to run the app locally, as explained below. To run this project locally, you will need node, npm, and ruby on rails installed.
 
+# Coding Updates
+
+## November 12, 2019
+
+Basic user login system works. Try logging in with `bob@smith.com` and `password`. To get the latest changes, `cd` into `WaitTimes` and `git pull`. In `WaitTimes` run `bundle` to install the latest dependencies, then `rake db:setup` to reset and seed the database (you may need to run `sudo service postgresql start` first), then `bin/rails s` to start the Rails API server. In `WaitTimes\client` run `npm install` to install the latest dependencies, then `npm start` to start the React front-end. As always, don't code on master; see step 3 of 'Pull Requests' below.
+
+To-do list (for Minimum Viable product; not comprehensive):
+
+1. Implement user registration system. This will involve creating a form in React and then submitting that data to an end-point in Rails where Active Record calls will ultimately update the database.
+
+2. Seed database with data for a few sample "ER Visits"
+
+3. Implement form for client-side "ER Visit" initiation based on questions grabbed from database.
+
+4. Implement triage-nurse admin panel to see incoming ER Visits and assign a wait time.
+
+5. Use websockets to live-update assigned wait time for client from triage nurse.
+
 # Pull Requests
 
 Please follow this procedure to add your code to the repository:
