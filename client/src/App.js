@@ -46,9 +46,9 @@ class App extends Component {
     return (
       <Router>
         <nav className="navbar">
-          <div className="navbar-left"><h1>
-            Visit<span>ER</span>
-          </h1></div>
+          <div className="navbar-left">
+            <h1>Visit<span>ER</span></h1>
+          </div>
           <div className="navbar-right">{(this.state.loggedInStatus === LOGGED_IN)
             ? <Button onClick={this.logout}>Log Out</Button>
             : <Button>Register</Button>

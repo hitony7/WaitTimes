@@ -23,7 +23,7 @@ class Login extends Component {
         // this.props.setUser(this.props.cookies.get('email'))
         // this.setState({redirect:true})
         // axios.post('/api/users', {email: this.props.cookies.get('email')})
-        const requestJSONobj = { "auth": { "email": values.email, "password": values.password } };
+        const requestJSONobj = { "auth": { "email": values.email.toLowerCase(), "password": values.password } };
         console.log(requestJSONobj);
         axios.post('api/user_token', requestJSONobj)
           .then((response) => {
