@@ -21,6 +21,8 @@ To-do list (for Minimum Viable product; not comprehensive):
 
 5. Use websockets to live-update assigned wait time for client from triage nurse.
 
+6. CTAS score and Likert scale assignment algorithm.
+
 # Pull Requests
 
 Please follow this procedure to add your code to the repository:
