@@ -33,8 +33,28 @@ class Login extends Component {
             this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })
           .catch(function (error) {
-            window.alert('Error: Incorrect credentials');
-            console.log(error);
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              console.log(error.response.status);
+              if (error.response.status === 404) {
+                window.alert('Login Error: Incorrect credentials');
+              }
+              if (error.response.status === 500) {
+                window.alert('Server Error: The server is either not running or may not be configured correctly.');
+              }
+              console.log(error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              console.log(error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
           });
       }
     });
