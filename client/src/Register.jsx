@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Radio } from 'antd';
+import { Form, Icon, Input, Button, Radio, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 const querystring = require('querystring');
@@ -11,7 +11,9 @@ class Register extends Component {
     this.state = {
       redirect: false,
       radio: 'caregiver',
-      message: 'Register as a new user here. All fields are required.'
+      message: 'Register as a new user here. All fields are required.',
+      serverResponse: '',
+      serverResponseErrors: null
     };
     this.updateRadioButton = this.updateRadioButton.bind(this);
   }
@@ -34,6 +36,8 @@ class Register extends Component {
 
   submitRegistration = e => {
     e.preventDefault();
+    this.setState({ serverResponse: '' }); // clear before submitting if alerts already displayed
+    this.setState({ serverResponseErrors: null }); // clear before submitting if alerts already displayed
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const requestJSONobj = {
@@ -42,22 +46,29 @@ class Register extends Component {
           "email": values.email.toLowerCase(),
           "phone": values.phone,
           "password": values.password,
-          "confirm_password": values.password,
+          "password_confirmation": values.password_confirmation,
           "role": this.state.radio
         };
         // console.log(requestJSONobj);
         axios.post('api/users', querystring.stringify(requestJSONobj))
           .then((response) => {
             console.log('Server response', response);
-            this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
+            this.setState({ serverResponse: 'Registration successful, redirecting to homepage…' });
+            setTimeout(function () { //Start the timer
+              this.setState({ redirect: true }) //After 1 second, set redirect to true
+            }.bind(this), 1000);
           })
-          .catch(function (error) {
+          .catch((error) => {
+            console.log(error);
             if (error.response) {
+              this.setState({ serverResponseErrors: error.response.data.errors });
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
+              console.log('error response data', error.response.data.errors);
               console.log(error.response.data);
               console.log(error.response.status);
               console.log(error.response.headers);
+
             } else if (error.request) {
               // The request was made but no response was received
               // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -85,7 +96,7 @@ class Register extends Component {
         <h1>User Registration</h1>
         <h2>{this.state.message}</h2>
 
-        <Form onSubmit={this.submitRegistration} className="login-form">
+        <Form onSubmit={this.submitRegistration} className="registration-form">
           <Form.Item>
             {getFieldDecorator('first_name', {
               rules: [{ required: true, message: 'Please input your first name!' }],
@@ -175,6 +186,8 @@ class Register extends Component {
               Register
           </Button>
           </Form.Item>
+          {this.state.serverResponse && <Alert message={this.state.serverResponse} type="success" />}
+          {this.state.serverResponseErrors && <Alert message="Error(s) occured" type="warning" />}
         </Form>
 
         <Button onClick={this.cancel}>Cancel</Button>
