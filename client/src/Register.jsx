@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Radio } from 'antd';
 import { Redirect } from "react-router-dom";
-// import $ from 'jquery';
 import axios from 'axios';
 const querystring = require('querystring');
 
 class Register extends Component {
 
-  state = {
-    redirect: false,
-    message: 'Register as a new user here. All fields are required.',
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: false,
+      radio: 'caregiver',
+      message: 'Register as a new user here. All fields are required.'
+    };
+    this.updateRadioButton = this.updateRadioButton.bind(this);
   }
 
 
@@ -18,6 +22,10 @@ class Register extends Component {
   //     this.setState({ redirect: false })
   //   }
   // }
+
+  updateRadioButton(value) {
+    this.setState({ radio: value.target.value });
+  }
 
   cancel = e => {
     e.preventDefault();
@@ -28,7 +36,16 @@ class Register extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const requestJSONobj = { "email": values.email.toLowerCase(), "password": values.password };
+        const requestJSONobj = {
+          "first_name": values.first_name,
+          "last_name": values.last_name,
+          "email": values.email.toLowerCase(),
+          "phone": values.phone,
+          "password": values.password,
+          "confirm_password": values.password,
+          "role": this.state.radio
+        };
+        // console.log(requestJSONobj);
         axios.post('api/users', querystring.stringify(requestJSONobj))
           .then((response) => {
             console.log('Server response', response);
@@ -136,16 +153,22 @@ class Register extends Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('password_confirmation', {
-              rules: [{ required: true, message: 'Please input your password!' }],
+              rules: [{ required: true, message: 'Please confirm your password!' }],
             })(
               <Input
                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                name="password"
-                id="password"
+                name="password_confirmation"
+                id="password_confirmation"
                 type="password"
                 placeholder="Confirm Password"
               />
             )}
+          </Form.Item>
+          <Form.Item>
+            <Radio.Group defaultValue="caregiver" buttonStyle="solid" onChange={this.updateRadioButton}>
+              <Radio.Button value="caregiver">Caregiver of patient</Radio.Button>
+              <Radio.Button value="triage_staff">Hospital triage staff</Radio.Button>
+            </Radio.Group>
           </Form.Item>
           <Form.Item>
             <Button htmlType="submit">

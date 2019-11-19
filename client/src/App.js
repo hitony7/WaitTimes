@@ -56,11 +56,11 @@ class App extends Component {
           <Switch>
             <Route
               path="/admin"
-              render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Redirect to='/' /> : <Admin {...props} />}
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} /> : <Redirect to='/' />}
             />
             <Route
               path="/event"
-              render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Redirect to='/' /> : <Event {...props} />}
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Event {...props} /> : <Redirect to='/' /> }
             />
             <Route
               path="/register"
