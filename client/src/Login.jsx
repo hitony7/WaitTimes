@@ -3,6 +3,8 @@ import { Form, Icon, Input, Button, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
+const querystring = require('querystring');
+
 
 class Login extends Component {
 
@@ -23,13 +25,14 @@ class Login extends Component {
         // this.props.setUser(this.props.cookies.get('email'))
         // this.setState({redirect:true})
         // axios.post('/api/users', {email: this.props.cookies.get('email')})
-        const requestJSONobj = { "auth": { "email": values.email.toLowerCase(), "password": values.password } };
+        const requestJSONobj = { "email": values.email.toLowerCase(), "password": values.password };
         console.log(requestJSONobj);
-        axios.post('api/user_token', requestJSONobj)
+        axios.post('api/login', querystring.stringify(requestJSONobj))
           .then((response) => {
-            // console.log(response);
-            localStorage.setItem("jwt", response.data.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
+            // console.log('Server response', response);
+            localStorage.setItem("token", response.data.token);
             this.props.setUser(values.email); // set the user's email in the React state
+            this.props.setRole(response.data.role); // set the user's email in the React state
             this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })
           .catch(function (error) {
@@ -38,7 +41,7 @@ class Login extends Component {
               // that falls out of the range of 2xx
               console.log(error.response.data);
               console.log(error.response.status);
-              if (error.response.status === 404) {
+              if (error.response.status === 401) {
                 window.alert('Login Error: Incorrect credentials');
               }
               if (error.response.status === 500) {

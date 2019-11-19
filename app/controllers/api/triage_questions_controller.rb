@@ -1,6 +1,6 @@
 class Api::TriageQuestionsController < ApplicationController
-  before_action :authenticate_user # requires JWT authentication
-  # before_action :set_triage_question, only: [:show, :update, :destroy]
+  before_action :authorize_request
+  before_action :set_triage_question, only: [:show, :update, :destroy]
 
   # GET /triage_questions
   def index

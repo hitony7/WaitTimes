@@ -14,7 +14,7 @@ import { Redirect } from "react-router-dom";
 // const cookies = new Cookies();
 const LOGGED_IN = 'LOGGED_IN';
 const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
-let jwt_token = localStorage.getItem("jwt");
+let jwt_token = localStorage.getItem("token");
 
 class App extends Component {
 
@@ -23,6 +23,7 @@ class App extends Component {
     this.state = {
       loggedInStatus: jwt_token ? LOGGED_IN : NOT_LOGGED_IN,
       email: '',
+      role: 'caregiver'
     };
   }
 
@@ -37,10 +38,14 @@ class App extends Component {
   logout = event => {
     event.preventDefault()
     // Remove the token from localStorage
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     // Update the state
     this.setState({ loggedInStatus: NOT_LOGGED_IN, email: '' });
-  }
+  };
+
+  setRole = role => {
+    this.setState({ role: role });
+  };
 
   render() {
     return (
@@ -63,7 +68,7 @@ class App extends Component {
             <Route
               path="/"
               render={props => (
-                <Login {...props} setUser={this.setUser} />
+                <Login {...props} setUser={this.setUser} setRole={this.setRole} />
               )}
             />
           </Switch>

@@ -20,11 +20,11 @@ class Admin extends Component {
   // }
 
   getTriageQuestions = () => {
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("token");
     const config = {
       headers: { 'Authorization': "Bearer " + token }
     };
-console.log(config);
+    // console.log(config);
     const bodyParameters = {
       key: "value"
     }
