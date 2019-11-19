@@ -9,7 +9,7 @@ class Admin extends Component {
 
   state = {
     redirect: false,
-    message: 'Welcome to VisitER! Click the button below to load data!',
+    message: 'Welcome to the triage admin panel. Here we will list all incoming ER-visit requests and assign them a wait time.',
   }
 
 
@@ -19,39 +19,6 @@ class Admin extends Component {
   //   }
   // }
 
-  getTriageQuestions = () => {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: { 'Authorization': "Bearer " + token }
-    };
-    // console.log(config);
-    const bodyParameters = {
-      key: "value"
-    }
-    axios
-      .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
-      .then(response => {
-        // handle success
-        // console.log(response.data); // The entire response from the Rails API
-        // console.log(response.data.message); // Just the message
-        this.setState({
-          message: response.data[0].question_text
-        });
-      });
-  };
-
-  fetchData = () => {
-    axios
-      .get('/api/data') // You can simply make your requests to "/api/whatever you want"
-      .then(response => {
-        // handle success
-        // console.log(response.data); // The entire response from the Rails API
-        // console.log(response.data.message); // Just the message
-        this.setState({
-          message: response.data.message
-        });
-      });
-  };
 
   render() {
     // const { getFieldDecorator } = this.props.form;
@@ -63,8 +30,8 @@ class Admin extends Component {
     }
     return (
       <div>
+        <h1>Admin Panel</h1>
         <h2>{this.state.message}</h2>
-        <Button onClick={this.getTriageQuestions}>Fetch Data</Button>
       </div>
     );
   }
