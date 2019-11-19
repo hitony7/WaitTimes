@@ -2,6 +2,7 @@
 
 class Api::AuthenticationController < ApplicationController
   before_action :authorize_request, except: :login
+  # from https://medium.com/binar-academy/rails-api-jwt-authentication-a04503ea3248
 
   # POST /auth/login
   def login
