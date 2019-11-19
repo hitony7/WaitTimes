@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import Login from './Login.jsx';
 import Admin from './Admin.jsx';
 import Event from './Event.jsx';
+import Register from './Register.jsx';
 // import $ from 'jquery';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Redirect } from "react-router-dom";
@@ -48,9 +49,7 @@ class App extends Component {
           <div className="navbar-left">
             <h1>Visit<span>ER</span></h1>
           </div>
-          <div className="navbar-right">{(this.state.loggedInStatus === LOGGED_IN)
-            ? <Button onClick={this.logout}>Log Out</Button>
-            : <Button>Register</Button>
+          <div className="navbar-right">{this.state.loggedInStatus === LOGGED_IN && <Button onClick={this.logout}>Log Out</Button>
           }</div>
         </nav>
         <div className="App">
@@ -62,6 +61,10 @@ class App extends Component {
             <Route
               path="/event"
               render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Redirect to='/' /> : <Event {...props} />}
+            />
+            <Route
+              path="/register"
+              render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Register {...props} /> : <Redirect to='/' />}
             />
             <Route
               path="/"

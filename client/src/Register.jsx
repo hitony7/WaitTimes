@@ -19,6 +19,11 @@ class Register extends Component {
   //   }
   // }
 
+  cancel = e => {
+    e.preventDefault();
+    this.setState({ redirect: true });
+  }
+
 
   render() {
     // const { getFieldDecorator } = this.props.form;
@@ -29,6 +34,7 @@ class Register extends Component {
       <div>
         <h1>Register</h1>
         <h2>{this.state.message}</h2>
+        <Button onClick={this.cancel}>Cancel</Button>
       </div>
     );
   }
