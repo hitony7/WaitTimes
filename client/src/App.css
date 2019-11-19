@@ -54,6 +54,12 @@ nav.navbar {
   margin-bottom: 1em;
 }
 
+.registration-form .ant-list {
+  background-color: #fff1f0;
+  border: 1px solid #ffa39e;
+  border-radius: 4px;
+}
+
 @media only screen and (min-width: 768px) {
   .sign-in {
     width: 50%;

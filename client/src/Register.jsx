@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Radio, Alert } from 'antd';
+import { Form, Icon, Input, Button, Radio, Alert, List } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 const querystring = require('querystring');
@@ -52,14 +52,12 @@ class Register extends Component {
         // console.log(requestJSONobj);
         axios.post('api/users', querystring.stringify(requestJSONobj))
           .then((response) => {
-            console.log('Server response', response);
             this.setState({ serverResponse: 'Registration successful, redirecting to homepage…' });
             setTimeout(function () { //Start the timer
               this.setState({ redirect: true }) //After 1 second, set redirect to true
             }.bind(this), 1000);
           })
           .catch((error) => {
-            console.log(error);
             if (error.response) {
               this.setState({ serverResponseErrors: error.response.data.errors });
               // The request was made and the server responded with a status code
@@ -186,8 +184,18 @@ class Register extends Component {
               Register
           </Button>
           </Form.Item>
-          {this.state.serverResponse && <Alert message={this.state.serverResponse} type="success" />}
-          {this.state.serverResponseErrors && <Alert message="Error(s) occured" type="warning" />}
+          {this.state.serverResponse && <Alert
+            message="Registration Succesful"
+            description="Redirecting to the sign-in page…"
+            type="success"
+            showIcon
+          />}
+          {this.state.serverResponseErrors && <List
+            header={<h2>Error!</h2>}
+            bordered
+            dataSource={this.state.serverResponseErrors}
+            renderItem={item => <List.Item>{item}</List.Item>}
+          />}
         </Form>
 
         <Button onClick={this.cancel}>Cancel</Button>
