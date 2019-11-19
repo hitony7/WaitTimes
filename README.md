@@ -5,6 +5,10 @@ This project was started using the [React + Rails Boilerplate](https://github.co
 
 # Coding Updates
 
+## November 19, 2019 2:30 PM
+
+User registration system works!
+
 ## November 18, 2019
 
 Roles implemented on front-end. Signing in as `bob@smith.com` or `jackie@ahs.com` (both `password`) gives a different screen (new ER event or triage admin panel, depending on role).

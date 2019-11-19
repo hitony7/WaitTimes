@@ -9,7 +9,8 @@ const querystring = require('querystring');
 class Login extends Component {
 
   state = {
-    redirect: false
+    redirect: false,
+    register: false
   }
   // componentDidUpdate() {
   //   if (this.state.redirect) {
@@ -59,10 +60,18 @@ class Login extends Component {
 
   };
 
+  register = e => {
+    e.preventDefault();
+    this.setState({ register: true });
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
       return this.props.role === 'triage_staff' ? <Redirect to='/admin' /> : <Redirect to='/event' />;
+    }
+    if (this.state.register) {
+      return <Redirect to='/register' />
     }
     return (
       <div className="sign-in">
@@ -105,6 +114,7 @@ class Login extends Component {
           </Button>
           </Form.Item>
         </Form>
+        <Button onClick={this.register}>Register</Button>
 
       </div>
     );
