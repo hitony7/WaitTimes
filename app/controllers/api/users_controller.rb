@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::UsersController < ApplicationController
+  before_action :authorize_request, except: :create
   before_action :set_user, only: %i[show update destroy]
 
   # GET /users

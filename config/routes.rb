@@ -5,9 +5,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     get '/data', to: 'tests#index' # /api/data
-    post 'user_token' => 'user_token#create'
+    post '/login', to: 'authentication#login'
 
-    # resources :dogs
+    resources :users
 
     resources :triage_questions
   end

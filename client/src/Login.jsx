@@ -3,6 +3,8 @@ import { Form, Icon, Input, Button, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
+const querystring = require('querystring');
+
 
 class Login extends Component {
 
@@ -19,22 +21,38 @@ class Login extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // this.props.cookies.set("email", values.email, { path: '/' })
-        // this.props.setUser(this.props.cookies.get('email'))
-        // this.setState({redirect:true})
-        // axios.post('/api/users', {email: this.props.cookies.get('email')})
-        const requestJSONobj = { "auth": { "email": values.email.toLowerCase(), "password": values.password } };
-        console.log(requestJSONobj);
-        axios.post('api/user_token', requestJSONobj)
+        const requestJSONobj = { "email": values.email.toLowerCase(), "password": values.password };
+        axios.post('api/login', querystring.stringify(requestJSONobj))
           .then((response) => {
-            // console.log(response);
-            localStorage.setItem("jwt", response.data.jwt); // this instead of a cookie; from https://codebrains.io/rails-jwt-authentication-with-knock/
+            // console.log('Server response', response);
+            localStorage.setItem("token", response.data.token);
             this.props.setUser(values.email); // set the user's email in the React state
+            this.props.setRole(response.data.role); // set the user's email in the React state
             this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })
           .catch(function (error) {
-            window.alert('Error: Incorrect credentials');
-            console.log(error);
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              // console.log(error.response.data);
+              // console.log(error.response.status);
+              if (error.response.status === 401) {
+                window.alert('Login Error: Incorrect credentials');
+              }
+              if (error.response.status === 500) {
+                window.alert('Server Error: The server is either not running or may not be configured correctly.');
+              }
+              console.log(error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              console.log(error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
           });
       }
     });
@@ -44,7 +62,7 @@ class Login extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
-      return (<Redirect to='/admin' />)
+      return this.props.role === 'triage_staff' ? <Redirect to='/admin' /> : <Redirect to='/event' />;
     }
     return (
       <div className="sign-in">

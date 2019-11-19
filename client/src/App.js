@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
 import './App.css';
-// import Cookies from 'universal-cookie';
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Button } from 'antd';
 import Login from './Login.jsx';
 import Admin from './Admin.jsx';
+import Event from './Event.jsx';
 // import $ from 'jquery';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Redirect } from "react-router-dom";
 
-// const cookies = new Cookies();
 const LOGGED_IN = 'LOGGED_IN';
 const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
-let jwt_token = localStorage.getItem("jwt");
+let jwt_token = localStorage.getItem("token");
 
 class App extends Component {
 
@@ -23,24 +20,26 @@ class App extends Component {
     this.state = {
       loggedInStatus: jwt_token ? LOGGED_IN : NOT_LOGGED_IN,
       email: '',
+      role: 'caregiver'
     };
   }
 
-
   setUser = email => {
-    this.setState({ email: email }, () =>
-      console.log('Current state after setting user', this.state)
-    );
+    this.setState({ email: email });
     this.setState({ loggedInStatus: LOGGED_IN });
   };
 
   logout = event => {
     event.preventDefault()
     // Remove the token from localStorage
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     // Update the state
     this.setState({ loggedInStatus: NOT_LOGGED_IN, email: '' });
-  }
+  };
+
+  setRole = role => {
+    this.setState({ role: role });
+  };
 
   render() {
     return (
@@ -61,9 +60,13 @@ class App extends Component {
               render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Redirect to='/' /> : <Admin {...props} />}
             />
             <Route
+              path="/event"
+              render={(props) => (this.state.loggedInStatus === NOT_LOGGED_IN) ? <Redirect to='/' /> : <Event {...props} />}
+            />
+            <Route
               path="/"
               render={props => (
-                <Login {...props} setUser={this.setUser} />
+                <Login {...props} setUser={this.setUser} setRole={this.setRole} role={this.state.role} />
               )}
             />
           </Switch>
