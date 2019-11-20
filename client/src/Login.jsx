@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Alert } from 'antd';
+import { Form, Icon, Input, Button, Alert, List } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
@@ -10,7 +10,8 @@ class Login extends Component {
 
   state = {
     redirect: false,
-    register: false
+    register: false,
+    serverResponse: '',
   }
   // componentDidUpdate() {
   //   if (this.state.redirect) {
@@ -20,6 +21,7 @@ class Login extends Component {
 
   login = e => {
     e.preventDefault();
+    this.setState({ serverResponse: '' });
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const requestJSONobj = { "email": values.email.toLowerCase(), "password": values.password };
@@ -31,17 +33,17 @@ class Login extends Component {
             this.props.setRole(response.data.role); // set the user's email in the React state
             this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })
-          .catch(function (error) {
+          .catch((error) => {
             if (error.response) {
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
               // console.log(error.response.data);
               // console.log(error.response.status);
               if (error.response.status === 401) {
-                window.alert('Login Error: Incorrect credentials');
+                this.setState({ serverResponse: 'Incorrect credentials' });
               }
               if (error.response.status === 500) {
-                window.alert('Server Error: The server is either not running or may not be configured correctly.');
+                this.setState({ serverResponse: 'The server is either not responding or may not be configured correctly.' });
               }
               console.log(error.response.headers);
             } else if (error.request) {
@@ -115,6 +117,12 @@ class Login extends Component {
               Login
           </Button>
           </Form.Item>
+          {this.state.serverResponse && <Alert
+            message="Error"
+            closable
+            type="error"
+            description={this.state.serverResponse}
+          />}
         </Form>
         <Button onClick={this.register}>Register</Button>
 
