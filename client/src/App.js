@@ -25,6 +25,7 @@ class App extends Component {
       patient_id: null,
       patient_name: '',
       er_visit_id: null,
+      global_disclaimer: 'If your child is experiencing life-threatening injuries, please go to your nearest emergency department or call 9-1-1. If your child is unconscious, has been in a car accident, is having difficulty breathing, or will not stop seizing (having a seizure), call 9-1-1.'
     };
   }
 
@@ -76,7 +77,7 @@ class App extends Component {
             />
             <Route
               path="/event"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver' && this.state.patient_id) ? <Event {...props} patient_id={this.state.patient_id} patient_name={this.state.patient_name} setVisitId={this.setVisitId} /> : <Redirect to='/' /> }
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver' && this.state.patient_id) ? <Event {...props} patient_id={this.state.patient_id} patient_name={this.state.patient_name} setVisitId={this.setVisitId} global_disclaimer={this.state.global_disclaimer} /> : <Redirect to='/' /> }
             />
             <Route
               path="/register"
@@ -85,7 +86,7 @@ class App extends Component {
             <Route
               path="/"
               render={props => (
-                <Login {...props} setUser={this.setUser} setRole={this.setRole} role={this.state.role} />
+                <Login {...props} setUser={this.setUser} setRole={this.setRole} role={this.state.role} global_disclaimer={this.state.global_disclaimer} />
               )}
             />
           </Switch>

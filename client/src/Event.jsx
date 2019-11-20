@@ -148,7 +148,7 @@ class Event extends Component {
         <div className="sign-in">
           <Alert
             message="Warning"
-            description="If this is a real emergency, close this app and dial 911!"
+            description={this.props.global_disclaimer}
             type="error"
             closable
           />

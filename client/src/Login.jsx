@@ -7,10 +7,13 @@ const querystring = require('querystring');
 
 class Login extends Component {
 
-  state = {
-    redirect: false,
-    register: false,
-    serverResponse: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: false,
+      register: false,
+      serverResponse: '',
+    }
   }
   // componentDidUpdate() {
   //   if (this.state.redirect) {
@@ -78,7 +81,7 @@ class Login extends Component {
       <div className="sign-in">
         <Alert
           message="Warning"
-          description="If this is a real emergency, close this app and dial 911!"
+          description={this.props.global_disclaimer}
           type="error"
           closable
         />
