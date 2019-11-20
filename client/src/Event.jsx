@@ -6,6 +6,7 @@ import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
 const querystring = require('querystring');
+const { TextArea } = Input;
 
 
 class Event extends Component {
@@ -48,27 +49,25 @@ class Event extends Component {
       });
   };
 
-  submitPatientRegistration = e => {
+  startEmergencyEvent = e => {
     e.preventDefault();
     this.setState({ serverResponse: '' }); // clear before submitting if alerts already displayed
     this.setState({ serverResponseErrors: null }); // clear before submitting if alerts already displayed
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const requestJSONobj = {
-          "ahc_number": values.ahc_number,
-          "address": values.address,
-          "name": values.name,
-          "age": values.age
+          "visit_description": values.visit_description,
+          "emergency_rooms_id": 2
         };
         // console.log(requestJSONobj);
         const token = localStorage.getItem("token");
         const config = {
           headers: { 'Authorization': "Bearer " + token }
         };
-        axios.post('api/patient', querystring.stringify(requestJSONobj), config)
+        axios.post('api/event', querystring.stringify(requestJSONobj), config)
           .then((response) => {
             this.setState({ serverResponse: 'Redirecting…' });
-            this.props.setPatient({ patient_id: response.data.id, patient_name: response.data.name });
+            // this.props.setPatient({ patient_id: response.data.id, patient_name: response.data.name });
             // setTimeout(function () { //Start the timer
             //   this.setState({ redirect: true }) //After 1 second, set redirect to true
             // }.bind(this), 1000);
@@ -100,7 +99,10 @@ class Event extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    if (this.state.redirect || this.state.loggedInStatus === NOT_LOGGED_IN) {
+    if (this.state.redirect) {
+      return (<Redirect to='/questions' />)
+    }
+    if (this.state.loggedInStatus === NOT_LOGGED_IN) {
       return (<Redirect to='/' />)
     }
     return (
@@ -114,56 +116,17 @@ class Event extends Component {
         <h1>New ER Visit for {this.props.patient_name}</h1>
         <h2>{this.state.message}</h2>
 
-        <Form onSubmit={this.submitPatientRegistration} className="registration-form">
+        <Form onSubmit={this.startEmergencyEvent} className="registration-form">
           <Form.Item>
-            {getFieldDecorator('name', {
-              rules: [{ required: true, message: 'Please input your patient’s name!' }],
+            {getFieldDecorator('visit_description', {
+              rules: [{ required: true, message: 'Please input a description!' }],
             })(
-              <Input
-                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                name="name"
-                id="name"
+              <TextArea
+                rows={5}
+                name="visit_description"
+                id="visit_description"
                 type="text"
-                placeholder="Name"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('age', {
-              rules: [{ required: true, message: 'Please input your patient’s age!', max: 3, message: 'Maximum 3 digits!' }],
-            })(
-              <Input
-                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                name="age"
-                id="age"
-                type="text"
-                placeholder="Age"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('ahc_number', {
-              rules: [{ required: true, message: 'Please input your patient’s AHC number!', max: 10, message: 'Maximum 10 digits!' }],
-            })(
-              <Input
-                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                name="ahc_number"
-                id="ahc_number"
-                type="text"
-                placeholder="Alberta Healthcare Number"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('address', {
-              rules: [{ required: true, message: 'Please input your patient’s address!' }],
-            })(
-              <Input
-                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                name="address"
-                id="address"
-                type="text"
-                placeholder="Address"
+                placeholder="Give a quick summary of your emergency."
               />
             )}
           </Form.Item>
@@ -173,7 +136,7 @@ class Event extends Component {
           </Button>
           </Form.Item>
           {this.state.serverResponse && <Alert
-            message="Patient Registration Succesful"
+            message="Event Initiation Succesful"
             description={this.state.serverResponse}
             type="success"
             showIcon
