@@ -13,7 +13,8 @@ class Event extends Component {
     redirect: false,
     message: 'Please input your patient’s data below:',
     serverResponse: '',
-    serverResponseErrors: null
+    serverResponseErrors: null,
+    patient_id: null
   }
 
   cancel = e => {
@@ -46,7 +47,7 @@ class Event extends Component {
       });
   };
 
-  submitRegistration = e => {
+  submitPatientRegistration = e => {
     e.preventDefault();
     this.setState({ serverResponse: '' }); // clear before submitting if alerts already displayed
     this.setState({ serverResponseErrors: null }); // clear before submitting if alerts already displayed
@@ -66,6 +67,7 @@ class Event extends Component {
         axios.post('api/patient', querystring.stringify(requestJSONobj), config)
           .then((response) => {
             this.setState({ serverResponse: 'Redirecting…' });
+            this.setState({ patient_id: response.data.id });
             // setTimeout(function () { //Start the timer
             //   this.setState({ redirect: true }) //After 1 second, set redirect to true
             // }.bind(this), 1000);
@@ -108,7 +110,7 @@ class Event extends Component {
         <h1>Patient Registration</h1>
         <h2>{this.state.message}</h2>
 
-        <Form onSubmit={this.submitRegistration} className="registration-form">
+        <Form onSubmit={this.submitPatientRegistration} className="registration-form">
           <Form.Item>
             {getFieldDecorator('name', {
               rules: [{ required: true, message: 'Please input your patient’s name!' }],
