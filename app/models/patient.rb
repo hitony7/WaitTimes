@@ -3,5 +3,6 @@ class Patient < ApplicationRecord
   validates :ahc_number, presence: true
   validates :address, presence: true
   validates :age, presence: true, numericality: true
+  validates :name, presence: true
   validates :user, presence: true
 end
