@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { Button } from 'antd';
 import Login from './Login.jsx';
 import Admin from './Admin.jsx';
-import Event from './Event.jsx';
+import Patient from './Patient.jsx';
 import Register from './Register.jsx';
 // import $ from 'jquery';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -21,13 +21,20 @@ class App extends Component {
     this.state = {
       loggedInStatus: jwt_token ? LOGGED_IN : NOT_LOGGED_IN,
       email: '',
-      role: 'caregiver'
+      role: 'caregiver',
+      patient_id: null,
+      patient_name: ''
     };
   }
 
   setUser = email => {
     this.setState({ email: email });
     this.setState({ loggedInStatus: LOGGED_IN });
+  };
+
+  setPatient = (patientObject) => {
+    this.setState({ patient_id: patientObject.patient_id });
+    this.setState({ patient_name: patientObject.patient_name });
   };
 
   logout = event => {
@@ -59,8 +66,8 @@ class App extends Component {
               render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} /> : <Redirect to='/' />}
             />
             <Route
-              path="/event"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Event {...props} /> : <Redirect to='/' /> }
+              path="/patient"
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Patient {...props} setPatient={this.setPatient} /> : <Redirect to='/' /> }
             />
             <Route
               path="/register"

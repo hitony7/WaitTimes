@@ -68,7 +68,7 @@ class Login extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
-      return this.props.role === 'triage_staff' ? <Redirect to='/admin' /> : <Redirect to='/event' />;
+      return this.props.role === 'triage_staff' ? <Redirect to='/admin' /> : <Redirect to='/patient' />;
     }
     if (this.state.register) {
       return <Redirect to='/register' />

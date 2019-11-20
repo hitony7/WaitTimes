@@ -7,14 +7,13 @@ import NOT_LOGGED_IN from './App.js';
 const querystring = require('querystring');
 
 
-class Event extends Component {
+class Patient extends Component {
 
   state = {
     redirect: false,
     message: 'Please input your patient’s data below:',
     serverResponse: '',
-    serverResponseErrors: null,
-    patient_id: null
+    serverResponseErrors: null
   }
 
   cancel = e => {
@@ -67,7 +66,7 @@ class Event extends Component {
         axios.post('api/patient', querystring.stringify(requestJSONobj), config)
           .then((response) => {
             this.setState({ serverResponse: 'Redirecting…' });
-            this.setState({ patient_id: response.data.id });
+            this.props.setPatient({ patient_id: response.data.id, patient_name: response.data.name });
             // setTimeout(function () { //Start the timer
             //   this.setState({ redirect: true }) //After 1 second, set redirect to true
             // }.bind(this), 1000);
@@ -99,10 +98,7 @@ class Event extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    if (this.state.redirect) {
-      return (<Redirect to='/' />)
-    }
-    if (this.state.loggedInStatus === NOT_LOGGED_IN) {
+    if (this.state.redirect || this.state.loggedInStatus === NOT_LOGGED_IN) {
       return (<Redirect to='/' />)
     }
     return (
@@ -187,6 +183,6 @@ class Event extends Component {
   }
 }
 
-const PatientForm = Form.create({ name: 'patient' })(Event);
+const PatientForm = Form.create({ name: 'patient' })(Patient);
 
 export default PatientForm;
