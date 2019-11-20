@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Alert, List } from 'antd';
+import { Form, Icon, Input, Button, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
