@@ -23,7 +23,8 @@ class App extends Component {
       email: '',
       role: 'caregiver',
       patient_id: null,
-      patient_name: ''
+      patient_name: '',
+      er_visit_id: null,
     };
   }
 
@@ -36,6 +37,10 @@ class App extends Component {
     this.setState({ patient_id: patientObject.patient_id });
     this.setState({ patient_name: patientObject.patient_name });
   };
+
+  setVisitId = (id) => {
+    this.setState({ er_visit_id: id });
+  }
 
   logout = event => {
     event.preventDefault()
@@ -71,7 +76,7 @@ class App extends Component {
             />
             <Route
               path="/event"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver' && this.state.patient_id) ? <Event {...props} patient_id={this.state.patient_id} patient_name={this.state.patient_name} /> : <Redirect to='/' /> }
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver' && this.state.patient_id) ? <Event {...props} patient_id={this.state.patient_id} patient_name={this.state.patient_name} setVisitId={this.setVisitId} /> : <Redirect to='/' /> }
             />
             <Route
               path="/register"

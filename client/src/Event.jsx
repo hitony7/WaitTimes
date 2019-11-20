@@ -13,7 +13,7 @@ class Event extends Component {
 
   state = {
     redirect: false,
-    message: 'Please provide some details for your upcoming ER visit:',
+    message: 'Please provide some details for your upcoming ER visit. We can also add hospital selection on this page (stretch)',
     serverResponse: '',
     serverResponseErrors: null,
     triageQuestions: null
@@ -67,7 +67,7 @@ class Event extends Component {
         axios.post('api/event', querystring.stringify(requestJSONobj), config)
           .then((response) => {
             this.setState({ serverResponse: 'Redirecting…' });
-            // this.props.setPatient({ patient_id: response.data.id, patient_name: response.data.name });
+            this.props.setVisitId(response.data.id);
             // setTimeout(function () { //Start the timer
             //   this.setState({ redirect: true }) //After 1 second, set redirect to true
             // }.bind(this), 1000);
