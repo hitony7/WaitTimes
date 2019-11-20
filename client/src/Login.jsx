@@ -83,7 +83,7 @@ class Login extends Component {
           type="error"
           closable
         />
-        <p className="welcome-para">Welcome to VisitER, the online check-in system for non-life-threatening emergency room (ER) visits for children with Autism Spectrum Disorder (ASD). After electronically submitting your request to the triage staff, you will be given a wait time so that you may arrive in the ER once a physician is ready to see your child. This way you avoid waiting at the hospital.</p>
+        <p className="welcome-para">Welcome to VisitER, the online check-in system for non-life-threatening emergency room (ER) visits for children with Autism Spectrum Disorder (ASD). After electronically submitting your request to the triage staff, you will be given a wait time so that you may arrive in the ER once a physician is ready to see your child. This way you avoid waiting in the hospital, which may be unfamiliar and uncomfortable for your child.</p>
         <h2>Sign In</h2>
         <Form onSubmit={this.login} className="login-form">
           <Form.Item>
