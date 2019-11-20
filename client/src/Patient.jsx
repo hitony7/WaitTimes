@@ -125,7 +125,7 @@ class Patient extends Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('age', {
-              rules: [{ required: true, message: 'Please input your patient’s age!', max: 3, message: 'Maximum 3 digits!'  }],
+              rules: [{ required: true, max: 3, message: 'Please input your patient’s age (up to three digits)!' }],
             })(
               <Input
                 prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -138,7 +138,7 @@ class Patient extends Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('ahc_number', {
-              rules: [{ required: true, message: 'Please input your patient’s AHC number!', max: 10, message: 'Maximum 10 digits!'  }],
+              rules: [{ required: true, max: 10, message: 'Please input your patient’s AHC number (up to 10 digits)!' }],
             })(
               <Input
                 prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
