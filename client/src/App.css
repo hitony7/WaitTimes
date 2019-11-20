@@ -48,6 +48,7 @@ nav.navbar {
 
 .welcome-para {
   margin-top: 2em;
+  text-align: left;
 }
 
 .sign-in .ant-form {

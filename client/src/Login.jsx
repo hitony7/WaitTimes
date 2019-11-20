@@ -76,10 +76,12 @@ class Login extends Component {
     return (
       <div className="sign-in">
         <Alert
-          message="Warning: If this is a real emergency, do not use this app but instead dial 911!"
+          message="Warning"
+          description="If this is a real emergency, close this app and dial 911!"
           type="error"
+          closable
         />
-        <p className="welcome-para">Welcome to VisitER. Please sign in below.</p>
+        <p className="welcome-para">Welcome to VisitER, the online check-in system for non-life-threatening emergency room (ER) visits. After electronically submitting your request to the triage staff, you will be given a wait time so that you may arrive in the ER once a physician is available. This way, you avoid waiting at the hospital.</p>
         <h2>Sign In</h2>
         <Form onSubmit={this.login} className="login-form">
           <Form.Item>

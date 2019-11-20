@@ -12,7 +12,7 @@ class Event extends Component {
 
   state = {
     redirect: false,
-    message: 'Please provide some details for your upcoming ER visit. Emergency disclaimer once more!',
+    message: 'Please provide some details for your upcoming ER visit:',
     serverResponse: '',
     serverResponseErrors: null
   }
@@ -104,6 +104,12 @@ class Event extends Component {
     }
     return (
       <div className="sign-in">
+        <Alert
+          message="Warning"
+          description="If this is a real emergency, close this app and dial 911!"
+          type="error"
+          closable
+        />
         <h1>New ER Visit for {this.props.patient_name}</h1>
         <h2>{this.state.message}</h2>
 
