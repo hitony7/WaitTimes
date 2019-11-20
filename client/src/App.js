@@ -25,7 +25,7 @@ class App extends Component {
       patient_id: null,
       patient_name: '',
       er_visit_id: null,
-      global_disclaimer: 'If your child is experiencing life-threatening injuries, please go to your nearest emergency department or call 9-1-1. If your child is unconscious, has been in a car accident, is having difficulty breathing, or will not stop seizing (having a seizure), call 9-1-1.'
+      global_disclaimer: 'If your child is experiencing life-threatening injuries, please go to your nearest emergency department or call 9-1-1. If your child is unconscious, has been in a car accident, is having difficulty breathing, or will not stop seizing (having a seizure), call 9-1-1. Also note that this app is a proof of concept and is not production-quality code.'
     };
   }
 
