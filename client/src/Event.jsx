@@ -1,4 +1,5 @@
 
+
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Alert, List } from 'antd';
 import { Redirect } from "react-router-dom";
@@ -7,11 +8,11 @@ import NOT_LOGGED_IN from './App.js';
 const querystring = require('querystring');
 
 
-class Patient extends Component {
+class Event extends Component {
 
   state = {
     redirect: false,
-    message: 'Please input your patient’s data below:',
+    message: 'Please provide some details for your upcoming ER visit. Emergency disclaimer once more!',
     serverResponse: '',
     serverResponseErrors: null
   }
@@ -67,9 +68,9 @@ class Patient extends Component {
           .then((response) => {
             this.setState({ serverResponse: 'Redirecting…' });
             this.props.setPatient({ patient_id: response.data.id, patient_name: response.data.name });
-            setTimeout(function () { //Start the timer
-              this.setState({ redirect: true }) //After 1 second, set redirect to true
-            }.bind(this), 1000);
+            // setTimeout(function () { //Start the timer
+            //   this.setState({ redirect: true }) //After 1 second, set redirect to true
+            // }.bind(this), 1000);
           })
           .catch((error) => {
             if (error.response) {
@@ -98,15 +99,12 @@ class Patient extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    if (this.state.redirect) {
-      return (<Redirect to='/event' />)
-    }
-    if (this.state.loggedInStatus === NOT_LOGGED_IN) {
+    if (this.state.redirect || this.state.loggedInStatus === NOT_LOGGED_IN) {
       return (<Redirect to='/' />)
     }
     return (
       <div className="sign-in">
-        <h1>Patient Registration</h1>
+        <h1>New ER Visit for {this.props.patient_name}</h1>
         <h2>{this.state.message}</h2>
 
         <Form onSubmit={this.submitPatientRegistration} className="registration-form">
@@ -125,7 +123,7 @@ class Patient extends Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('age', {
-              rules: [{ required: true, message: 'Please input your patient’s age!', max: 3, message: 'Maximum 3 digits!'  }],
+              rules: [{ required: true, message: 'Please input your patient’s age!', max: 3, message: 'Maximum 3 digits!' }],
             })(
               <Input
                 prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -138,7 +136,7 @@ class Patient extends Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('ahc_number', {
-              rules: [{ required: true, message: 'Please input your patient’s AHC number!', max: 10, message: 'Maximum 10 digits!'  }],
+              rules: [{ required: true, message: 'Please input your patient’s AHC number!', max: 10, message: 'Maximum 10 digits!' }],
             })(
               <Input
                 prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -186,6 +184,6 @@ class Patient extends Component {
   }
 }
 
-const PatientForm = Form.create({ name: 'patient' })(Patient);
+const EventForm = Form.create({ name: 'patient' })(Event);
 
-export default PatientForm;
+export default EventForm;
