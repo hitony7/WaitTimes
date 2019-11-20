@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     post '/login', to: 'authentication#login'
 
     post '/patient', to: 'patient#create'
+    post '/event', to: 'emergency_room_visit#create'
 
     resources :users
 

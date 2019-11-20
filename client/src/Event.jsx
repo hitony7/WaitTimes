@@ -14,7 +14,8 @@ class Event extends Component {
     redirect: false,
     message: 'Please provide some details for your upcoming ER visit:',
     serverResponse: '',
-    serverResponseErrors: null
+    serverResponseErrors: null,
+    triageQuestions: null
   }
 
   cancel = e => {
@@ -42,7 +43,7 @@ class Event extends Component {
         // console.log(response.data); // The entire response from the Rails API
         // console.log(response.data.message); // Just the message
         this.setState({
-          message: response.data[0].question_text
+          triageQuestions: response.data
         });
       });
   };
