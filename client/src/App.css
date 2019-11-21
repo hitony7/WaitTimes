@@ -42,6 +42,10 @@ nav.navbar {
   display: flex;
 }
 
+main h2 {
+  margin-top: 2em;
+}
+
 .navbar-right {
   margin-left: auto;
 }
