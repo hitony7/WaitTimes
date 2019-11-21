@@ -11,7 +11,7 @@ class Admin extends Component {
     super(props);
     this.state = {
       redirect: false,
-      message: 'Welcome to the triage admin panel. Here are all the incoming ER visit requests that we can assess and assign wait times to.',
+      message: 'Here are all the incoming ER visit requests that we can assess and assign wait times to.',
       error: null,
       isLoaded: false,
       visits: []
@@ -27,8 +27,9 @@ class Admin extends Component {
       .get('/api/events', config) // let's grab the triage questions from the database
       .then(response => {
         // handle success
-        for (const item of response.data) { // let's do some date updating
+        for (const item of response.data) { // let's do some date updating and name combining
           item.event_date = this.props.formatDateFromUTCString(item.event_date);
+          item.caregiver_name = item.caregiver_first_name + ' ' + item. caregiver_last_name;
         }
         this.setState({
           isLoaded: true,
@@ -63,14 +64,11 @@ class Admin extends Component {
       {
         title: 'Age',
         dataIndex: 'patient_age',
+        width: 100
       },
       {
-        title: 'Caregiver First Name',
-        dataIndex: 'caregiver_first_name',
-      },
-      {
-        title: 'Caregiver First Name',
-        dataIndex: 'caregiver_first_name',
+        title: 'Caregiver Name',
+        dataIndex: 'caregiver_name',
       },
       {
         title: 'Phone Number',
@@ -89,13 +87,16 @@ class Admin extends Component {
         dataIndex: 'event_date',
       },
       {
-        title: 'Visit Description',
-        dataIndex: 'visit_description',
-      },
-      {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
       },
+      {
+        title: 'Action',
+        key: 'operation',
+        fixed: 'right',
+        width: 100,
+        render: () => <a>Assign Wait Time</a>,
+      }
     ];
     // const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
@@ -114,7 +115,13 @@ class Admin extends Component {
           <h1>Triage Admin Panel</h1>
           <p>{this.state.message}</p>
           <h2>Pending ER Visits</h2>
-          <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 1200 }} />
+          <Table
+            columns={columns}
+            dataSource={visits}
+            rowKey={visits => visits.id}
+            scroll={{ x: 1200 }}
+            expandedRowRender={record => <p style={{ margin: 0 }}>{record.visit_description}</p>}
+          />
         </main>
       );
     }
