@@ -22,7 +22,9 @@ class Api::EmergencyRoomVisitController < ApplicationController
 
   # GET /event; only gives events for currently logged in user
   def index
-    @ervisit = EmergencyRoomVisit.where('users_id = ? AND is_active = ?', @current_user.id, true)
+    @ervisit = EmergencyRoomVisit
+               .where('emergency_room_visits.users_id = ? AND emergency_room_visits.is_active = ?', @current_user.id, true).joins(:patient)
+               .select('emergency_room_visits.*, patients.*')
 
     render json: @ervisit
   end
