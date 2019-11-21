@@ -26,7 +26,9 @@ class Caregiver extends Component {
       .get('/api/event', config) // let's grab the triage questions from the database
       .then(response => {
         // handle success
-        // console.log(response.data.message); // Just the message
+        for (const item of response.data) { // let's do some date updating
+          item.event_date = this.props.formatDateFromUTCString(item.event_date);
+        }
         this.setState({
           isLoaded: true,
           visits: response.data,
@@ -72,7 +74,7 @@ class Caregiver extends Component {
       },
       {
         title: 'Submission Date',
-        dataIndex: 'created_at',
+        dataIndex: 'event_date',
       },
       {
         title: 'Visit Description',

@@ -44,6 +44,11 @@ class App extends Component {
     this.setState({ er_visit_id: id });
   }
 
+  formatDateFromUTCString = date => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    return new Date(date).toLocaleDateString([],options);
+  }
+
   logout = event => {
     event.preventDefault()
     // Remove the token from localStorage
@@ -74,7 +79,7 @@ class App extends Component {
             />
             <Route
               path="/caregiver"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} /> : <Redirect to='/' /> }
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} formatDateFromUTCString={this.formatDateFromUTCString}/> : <Redirect to='/' /> }
             />
             <Route
               path="/patient"

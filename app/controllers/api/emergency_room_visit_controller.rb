@@ -24,7 +24,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
   def index
     @ervisit = EmergencyRoomVisit
                .where('emergency_room_visits.users_id = ? AND emergency_room_visits.is_active = ?', @current_user.id, true).joins(:patient)
-               .select('emergency_room_visits.*, patients.*')
+               .select("emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.created_at AS event_date, emergency_room_visits.patients_id, patients.*").order("created_at DESC")
 
     render json: @ervisit
   end
