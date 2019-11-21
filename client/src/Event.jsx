@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Alert, List } from 'antd';
+import { Form, Input, Button, Alert, List } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
