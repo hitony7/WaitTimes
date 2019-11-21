@@ -8,6 +8,7 @@ class Api::TriageQuestionAnswersController < ApplicationController
     saved = 0
     errors = 0
     arr = JSON.parse(CGI.unescape(params[:items])) # convert our incoming string into the hash
+    # from https://stackoverflow.com/questions/54245055/passing-array-of-objects-as-param-to-rails-controller
     arr.each do |i|
       @triage_question_answer = TriageQuestionAnswer.new
       @triage_question_answer.answer_text = i['answer_text']
@@ -27,6 +28,7 @@ class Api::TriageQuestionAnswersController < ApplicationController
       render json: "#{errors} errors occured", status: :unprocessable_entity
     end
   end
+  
 
   private
 
