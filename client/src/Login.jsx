@@ -78,7 +78,7 @@ class Login extends Component {
       return <Redirect to='/register' />
     }
     return (
-      <div className="sign-in">
+      <main className="sign-in">
         <Alert
           message="Warning"
           description={this.props.global_disclaimer}
@@ -128,7 +128,7 @@ class Login extends Component {
         </Form>
         <Button onClick={this.register}>Register</Button>
 
-      </div>
+      </main>
     );
   }
 }

@@ -192,7 +192,7 @@ class Event extends Component {
       return <div>Loading...</div>;
     } else {
       return (
-        <div className="sign-in">
+        <main className="sign-in">
           <h1>New ER Visit for {this.props.patient_name}</h1>
           <h2>{this.state.message}</h2>
 
@@ -243,7 +243,7 @@ class Event extends Component {
             />}
           </Form>
           <Button onClick={this.cancel}>Cancel</Button>
-        </div>
+        </main>
       );
     }
   }

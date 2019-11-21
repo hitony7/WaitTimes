@@ -92,7 +92,7 @@ class Patient extends Component {
       return (<Redirect to='/' />)
     }
     return (
-      <div className="sign-in">
+      <main className="sign-in">
         <h1>Patient Registration</h1>
         <h2>{this.state.message}</h2>
 
@@ -169,7 +169,7 @@ class Patient extends Component {
         </Form>
         <Button onClick={this.cancel}>Cancel</Button>
 
-      </div>
+      </main>
     );
   }
 }

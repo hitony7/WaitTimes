@@ -95,7 +95,7 @@ class Caregiver extends Component {
       return <div>Loading...</div>;
     } else {
       return (
-        <div>
+        <main>
           <h1>Caregiver Dashboard</h1>
           <p>{this.state.message}</p>
           <h2>New ER Visit</h2>
@@ -109,7 +109,7 @@ class Caregiver extends Component {
               </li>
             ))}
           </ul> */}
-        </div>
+        </main>
       );
     }
   }

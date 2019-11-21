@@ -32,8 +32,8 @@
   }
 }
 
-.sign-in {
-  margin: 1em;
+main {
+  padding: 1em;
 }
 
 nav.navbar {
@@ -69,9 +69,16 @@ nav.navbar {
 }
 
 @media only screen and (min-width: 768px) {
-  .sign-in {
-    width: 50%;
-    margin: 2em auto;
+  main {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  main {
+    width: 850px;
+    margin: 0 auto;
   }
   .App .ant-form-item-label {
   margin-top: 2em;
