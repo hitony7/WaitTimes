@@ -5,7 +5,7 @@ This project was started using the [React + Rails Boilerplate](https://github.co
 
 # Coding Updates
 
-## November 20, 2019 8:30 PM
+## November 20, 2019 9:30 PM
 
 Caregivers can now initialize ER visits for their child, which are stored in the database. Don't forget to run `rails db:migrate` in `WaitTimes` to migrate your local database after running `git pull`. Updated to-do list follows:
 
