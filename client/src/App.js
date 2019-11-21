@@ -7,6 +7,7 @@ import Admin from './Admin.jsx';
 import Patient from './Patient.jsx';
 import Register from './Register.jsx';
 import Event from './Event.jsx';
+import Caregiver from './Caregiver.jsx';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Redirect } from "react-router-dom";
 
@@ -70,6 +71,10 @@ class App extends Component {
             <Route
               path="/admin"
               render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} /> : <Redirect to='/' />}
+            />
+            <Route
+              path="/caregiver"
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} /> : <Redirect to='/' /> }
             />
             <Route
               path="/patient"

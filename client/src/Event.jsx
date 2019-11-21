@@ -15,7 +15,7 @@ class Event extends Component {
     super(props);
     this.state = {
       redirect: false,
-      message: 'Please provide some details for your upcoming ER visit.',
+      message: 'Please provide some details for your upcoming ER visit. All fields are required.',
       serverResponse: '',
       serverResponseErrors: null,
       triageQuestionsError: null,
@@ -121,14 +121,13 @@ class Event extends Component {
             });
             let formData = new FormData();
             formData.append("items", escape(JSON.stringify(answersToSend)));
-            console.log('answersToSend', answersToSend);
             return axios.post('api/triage_question_answers', formData, config)
             .then((response) => {
               this.setState({ serverResponse: 'Submitting info…' });
               // console.log(response);
-              // setTimeout(function () { //Start the timer
-              //   this.setState({ redirect: true }) //After 1 second, set redirect to true
-              // }.bind(this), 1000);
+              setTimeout(function () { //Start the timer
+                this.setState({ redirect: true }) //After 1 second, set redirect to true
+              }.bind(this), 1000);
             })
             .catch((error) => {
               if (error.response) {
@@ -180,7 +179,7 @@ class Event extends Component {
     const { getFieldDecorator } = this.props.form;
     const { triageQuestionsError, triageQuestionsAreLoaded, triageQuestions } = this.state;
     if (this.state.redirect) {
-      return (<Redirect to='/patient' />)
+      return (<Redirect to='/caregiver' />)
     }
     if (this.state.loggedInStatus === NOT_LOGGED_IN) {
       return (<Redirect to='/' />)
@@ -205,6 +204,7 @@ class Event extends Component {
                   name={question.id}
                   id={question.id}
                   type="text"
+                  required
                   onChange={this.handleTriageQuestionAnswerChange(question.id)}
                 />
               </Form.Item>
@@ -219,6 +219,7 @@ class Event extends Component {
                   name="visit_description"
                   id="visit_description"
                   type="text"
+                  required
                 />
               )}
             </Form.Item>

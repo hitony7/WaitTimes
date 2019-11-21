@@ -13,12 +13,13 @@ class Patient extends Component {
     redirect: false,
     message: 'Please input your patient’s data below:',
     serverResponse: '',
-    serverResponseErrors: null
+    serverResponseErrors: null,
+    cancelRedirect: false
   }
 
   cancel = e => {
     e.preventDefault();
-    this.setState({ redirect: true });
+    this.setState({ cancelRedirect: true });
   }
 
 
@@ -28,23 +29,6 @@ class Patient extends Component {
   //   }
   // }
 
-  getTriageQuestions = () => {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: { 'Authorization': "Bearer " + token }
-    };
-    // console.log(config);
-    axios
-      .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
-      .then(response => {
-        // handle success
-        // console.log(response.data); // The entire response from the Rails API
-        // console.log(response.data.message); // Just the message
-        this.setState({
-          message: response.data[0].question_text
-        });
-      });
-  };
 
   submitPatientRegistration = e => {
     e.preventDefault();
@@ -100,6 +84,9 @@ class Patient extends Component {
     const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
       return (<Redirect to='/event' />)
+    }
+    if (this.state.cancelRedirect) {
+      return (<Redirect to='/caregiver' />)
     }
     if (this.state.loggedInStatus === NOT_LOGGED_IN) {
       return (<Redirect to='/' />)
@@ -180,6 +167,7 @@ class Patient extends Component {
             renderItem={item => <List.Item>{item}</List.Item>}
           />}
         </Form>
+        <Button onClick={this.cancel}>Cancel</Button>
 
       </div>
     );
