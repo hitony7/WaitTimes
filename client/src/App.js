@@ -76,7 +76,7 @@ class App extends Component {
           <Switch>
             <Route
               path="/admin"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} /> : <Redirect to='/' />}
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} formatDateFromUTCString={this.formatDateFromUTCString}/> : <Redirect to='/' />}
             />
             <Route
               path="/caregiver"
