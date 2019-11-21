@@ -104,7 +104,8 @@ class Event extends Component {
       if (!err) {
         const requestJSONobj = {
           "visit_description": values.visit_description,
-          "emergency_rooms_id": 2
+          "emergency_rooms_id": 2,
+          "patients_id": this.props.patient_id
         };
         const token = localStorage.getItem("token");
         const config = {

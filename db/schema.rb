@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_21_005139) do
+ActiveRecord::Schema.define(version: 2019_11_21_013243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,7 +23,9 @@ ActiveRecord::Schema.define(version: 2019_11_21_005139) do
     t.bigint "users_id"
     t.bigint "emergency_rooms_id"
     t.boolean "is_active", default: true
+    t.bigint "patients_id"
     t.index ["emergency_rooms_id"], name: "index_emergency_room_visits_on_emergency_rooms_id"
+    t.index ["patients_id"], name: "index_emergency_room_visits_on_patients_id"
     t.index ["users_id"], name: "index_emergency_room_visits_on_users_id"
   end
 
@@ -67,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_11_21_005139) do
   end
 
   add_foreign_key "emergency_room_visits", "emergency_rooms", column: "emergency_rooms_id"
+  add_foreign_key "emergency_room_visits", "patients", column: "patients_id"
   add_foreign_key "emergency_room_visits", "users", column: "users_id"
   add_foreign_key "patients", "users", column: "users_id"
   add_foreign_key "triage_question_answers", "emergency_room_visits", column: "emergency_room_visits_id"

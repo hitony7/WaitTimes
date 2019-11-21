@@ -10,6 +10,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
     @ervisit.given_wait_time_minutes = params[:given_wait_time_minutes]
     @ervisit.emergency_rooms_id = params[:emergency_rooms_id]
     @ervisit.users_id = @current_user.id
+    @ervisit.patients_id = params[:patients_id]
 
     if @ervisit.save
       render json: @ervisit, status: :created
@@ -23,7 +24,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
 
   def emergency_room_visit_params
     params.permit(
-      :visit_description, :given_wait_time_minutes, :users_id, :emergency_rooms_id
+      :visit_description, :given_wait_time_minutes, :users_id, :emergency_rooms_id, :patients_id
     )
   end
 end

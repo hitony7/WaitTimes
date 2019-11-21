@@ -82,7 +82,7 @@ class App extends Component {
             />
             <Route
               path="/event"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver' && this.state.patient_id) ? <Event {...props} patient_id={this.state.patient_id} patient_name={this.state.patient_name} setVisitId={this.setVisitId} global_disclaimer={this.state.global_disclaimer} /> : <Redirect to='/' /> }
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver' && this.state.patient_id) ? <Event {...props} patient_id={this.state.patient_id} patient_name={this.state.patient_name} setVisitId={this.setVisitId} /> : <Redirect to='/' /> }
             />
             <Route
               path="/register"
