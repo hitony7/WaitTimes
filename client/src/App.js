@@ -45,6 +45,7 @@ class App extends Component {
   }
 
   formatDateFromUTCString = date => {
+    // from https://stackoverflow.com/questions/50430968/converting-string-date-in-react-javascript
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     return new Date(date).toLocaleDateString([],options);
   }
