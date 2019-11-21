@@ -20,7 +20,8 @@ class Event extends Component {
       serverResponseErrors: null,
       triageQuestionsError: null,
       triageQuestionsAreLoaded: false,
-      triageQuestions: []
+      triageQuestions: [],
+      triageQuestionAnswers: []
     };
   }
 
@@ -35,14 +36,19 @@ class Event extends Component {
       headers: { 'Authorization': "Bearer " + token }
     };
     axios
-      .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
+      .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
         // handle success
-        console.log(response.data); // The entire response from the Rails API
         // console.log(response.data.message); // Just the message
+        const numOfTriageQuestions = response.data.length;
+        let emptyAnswers = [];
+        for (let i = 1; i <= numOfTriageQuestions; i++) { // now let's create the empty answers object
+          emptyAnswers.push({ answer_text: '', triage_questions_id: i, emergency_room_visits_id: 0 });
+        }
         this.setState({
           triageQuestionsAreLoaded: true,
-          triageQuestions: response.data
+          triageQuestions: response.data,
+          triageQuestionAnswers: emptyAnswers
         });
       },
         // Note: it's important to handle errors here
@@ -63,23 +69,32 @@ class Event extends Component {
   //   }
   // }
 
-  getTriageQuestions = () => {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: { 'Authorization': "Bearer " + token }
-    };
-    // console.log(config);
-    axios
-      .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
-      .then(response => {
-        // handle success
-        // console.log(response.data); // The entire response from the Rails API
-        // console.log(response.data.message); // Just the message
-        this.setState({
-          triageQuestions: response.data
-        });
-      });
-  };
+  // getTriageQuestions = () => {
+  //   const token = localStorage.getItem("token");
+  //   const config = {
+  //     headers: { 'Authorization': "Bearer " + token }
+  //   };
+  //   // console.log(config);
+  //   axios
+  //     .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
+  //     .then(response => {
+  //       // handle success
+  //       // console.log(response.data); // The entire response from the Rails API
+  //       // console.log(response.data.message); // Just the message
+  //       this.setState({
+  //         triageQuestions: response.data
+  //       });
+  //     });
+  // };
+
+  handleTriageQuestionAnswerChange = idx => evt => {
+    const newAnswer = this.state.triageQuestionAnswers.map((answer, aidx) => {
+      if (idx - 1 !== aidx) return answer; // indices in PostgreSQL start at 1 not 0
+      return { ...answer, answer_text: evt.target.value }
+    });
+    // console.log('I\'m getting run'); // runs each time text is modified in a box
+    this.setState({ triageQuestionAnswers: newAnswer });
+  }
 
   startEmergencyEvent = e => {
     e.preventDefault();
@@ -91,18 +106,54 @@ class Event extends Component {
           "visit_description": values.visit_description,
           "emergency_rooms_id": 2
         };
-        // console.log(requestJSONobj);
         const token = localStorage.getItem("token");
         const config = {
           headers: { 'Authorization': "Bearer " + token }
         };
         axios.post('api/event', querystring.stringify(requestJSONobj), config)
           .then((response) => {
-            this.setState({ serverResponse: 'Redirecting…' });
-            this.props.setVisitId(response.data.id);
+            this.setState({ serverResponse: 'Submitting info…' });
+            const erVisitId = response.data.id;
+            this.props.setVisitId(erVisitId);
             // setTimeout(function () { //Start the timer
             //   this.setState({ redirect: true }) //After 1 second, set redirect to true
             // }.bind(this), 1000);
+            let answersToSend = this.state.triageQuestionAnswers;
+            answersToSend.forEach(ans => {
+              ans.emergency_room_visits_id = erVisitId;
+            });
+            let formData = new FormData();
+            formData.append("items", JSON.stringify(answersToSend));
+            console.log('answersToSend', answersToSend);
+            return axios.post('api/triage_question_answers', formData, config)
+            .then((response) => {
+              this.setState({ serverResponse: 'Submitting info…' });
+              console.log(response);
+              // setTimeout(function () { //Start the timer
+              //   this.setState({ redirect: true }) //After 1 second, set redirect to true
+              // }.bind(this), 1000);
+            })
+            .catch((error) => {
+              if (error.response) {
+                this.setState({ serverResponseErrors: error.response.data.errors });
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log('error response data', error.response.data.errors);
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+    
+              } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+              } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+              }
+              console.log(error.config);
+            });
           })
           .catch((error) => {
             if (error.response) {
@@ -155,25 +206,29 @@ class Event extends Component {
           <h1>New ER Visit for {this.props.patient_name}</h1>
           <h2>{this.state.message}</h2>
 
-          <ul>
-            {triageQuestions.map(question => (
-              <li key={question.id}>
-                {question.question_text}
-              </li>
-            ))}
-          </ul>
+          <Form onSubmit={this.startEmergencyEvent} className="registration-form" layout="horizontal">
 
-          <Form onSubmit={this.startEmergencyEvent} className="registration-form">
-            <Form.Item>
+            {triageQuestions.map((question, idx) => (
+              <Form.Item label={question.question_text} key={idx}>
+                <TextArea
+                  rows={3}
+                  name={question.id}
+                  id={question.id}
+                  type="text"
+                  onChange={this.handleTriageQuestionAnswerChange(question.id)}
+                />
+              </Form.Item>
+            ))}
+
+            <Form.Item label="Any other comments?">
               {getFieldDecorator('visit_description', {
-                rules: [{ required: true, message: 'Please input a description!' }],
+                rules: [{ required: false, message: 'Please input your answer!' }],
               })(
                 <TextArea
-                  rows={5}
+                  rows={3}
                   name="visit_description"
                   id="visit_description"
                   type="text"
-                  placeholder="Give a quick summary of your emergency."
                 />
               )}
             </Form.Item>
