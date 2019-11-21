@@ -29,10 +29,10 @@ class Admin extends Component {
       return (<Redirect to='/' />)
     }
     return (
-      <div>
+      <main>
         <h1>Admin Panel</h1>
         <h2>{this.state.message}</h2>
-      </div>
+      </main>
     );
   }
 }

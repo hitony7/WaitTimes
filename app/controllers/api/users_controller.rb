@@ -45,7 +45,7 @@ class Api::UsersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def find_user
-    @user = User.find_by_username!(params[:_username])
+    @user = User.find_by_email(params[:email])
   rescue ActiveRecord::RecordNotFound
     render json: { errors: 'User not found' }, status: :not_found
   end

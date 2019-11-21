@@ -5,6 +5,30 @@ This project was started using the [React + Rails Boilerplate](https://github.co
 
 # Coding Updates
 
+## November 20, 2019 9:30 PM
+
+Caregivers can now initialize ER visits for their child, which are stored in the database. Don't forget to run `rails db:migrate` in `WaitTimes` to migrate your local database after running `git pull`. Updated to-do list follows:
+
+1. ~~Implement user registration system. This will involve creating a form in React and then submitting that data to an end-point in Rails where Active Record calls will ultimately update the database.~~
+
+2. ~~Seed database with data for a few sample "ER Visits"~~
+
+3. ~~Implement form for client-side "ER Visit" initiation based on questions grabbed from database.~~
+
+4. Implement triage-nurse admin panel to see incoming ER Visits and assign a wait time.
+
+5. Use websockets to live-update assigned wait time for client from triage nurse.
+
+6. CTAS score and Likert scale assignment algorithm.
+
+7. Polishing: add patient allergies, gender, and caregiver relationship to patient
+
+8. Optional: add hospital selector based on geolocation
+
+9. Polishing: add input debouncing for triage question form elements.
+
+10. Add testing via rspec
+
 ## November 19, 2019 2:30 PM
 
 User registration system works!

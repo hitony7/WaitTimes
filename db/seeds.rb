@@ -64,13 +64,28 @@ p "Created #{User.count} users!"
 TriageQuestion.destroy_all
 
 TriageQuestion.create!(
-  question_text: 'Is your child\'s temperature over 39 degrees Celcius?'
+  question_text: 'Does your child already have a cast? Do they complain of it being too tight? Does it feel normal or tingly?'
 )
 TriageQuestion.create!(
-  question_text: 'Is your child showing any signs of rashing on their face?'
+  question_text: 'Is your child in pain? Where? What happened? Have they been given Tylenol or Advil? What makes the pain worse or better?'
 )
 TriageQuestion.create!(
-  question_text: 'Is your child able to breathe normally?'
+  question_text: 'Is your child having difficulty walking?'
+)
+TriageQuestion.create!(
+  question_text: 'What is the child\'s respiratory rate? Are the wheezing, coughing, or breathing harder than normal?'
+)
+TriageQuestion.create!(
+  question_text: 'What is the child\'s temperature?'
+)
+TriageQuestion.create!(
+  question_text: 'Is your child experiencing vertigo?'
+)
+TriageQuestion.create!(
+  question_text: 'Is your child anxious or combative?'
+)
+TriageQuestion.create!(
+  question_text: 'Is your child able to speak in complete sentences?'
 )
 # fill these out properly once available...
 

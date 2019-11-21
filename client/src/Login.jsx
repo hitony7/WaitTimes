@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Alert } from 'antd';
 import { Redirect } from "react-router-dom";
-// import $ from 'jquery';
 import axios from 'axios';
 const querystring = require('querystring');
 
 
 class Login extends Component {
 
-  state = {
-    redirect: false,
-    register: false
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: false,
+      register: false,
+      serverResponse: '',
+    }
   }
   // componentDidUpdate() {
   //   if (this.state.redirect) {
@@ -20,6 +23,7 @@ class Login extends Component {
 
   login = e => {
     e.preventDefault();
+    this.setState({ serverResponse: '' });
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const requestJSONobj = { "email": values.email.toLowerCase(), "password": values.password };
@@ -31,17 +35,17 @@ class Login extends Component {
             this.props.setRole(response.data.role); // set the user's email in the React state
             this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })
-          .catch(function (error) {
+          .catch((error) => {
             if (error.response) {
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
               // console.log(error.response.data);
               // console.log(error.response.status);
               if (error.response.status === 401) {
-                window.alert('Login Error: Incorrect credentials');
+                this.setState({ serverResponse: 'Incorrect credentials' });
               }
               if (error.response.status === 500) {
-                window.alert('Server Error: The server is either not running or may not be configured correctly.');
+                this.setState({ serverResponse: 'The server is either not responding or may not be configured correctly.' });
               }
               console.log(error.response.headers);
             } else if (error.request) {
@@ -68,18 +72,20 @@ class Login extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
-      return this.props.role === 'triage_staff' ? <Redirect to='/admin' /> : <Redirect to='/event' />;
+      return this.props.role === 'triage_staff' ? <Redirect to='/admin' /> : <Redirect to='/caregiver' />;
     }
     if (this.state.register) {
       return <Redirect to='/register' />
     }
     return (
-      <div className="sign-in">
+      <main className="sign-in">
         <Alert
-          message="Warning: If this is a real emergency, do not use this app but instead dial 911!"
+          message="Warning"
+          description={this.props.global_disclaimer}
           type="error"
+          closable
         />
-        <p className="welcome-para">Welcome to VisitER. Please sign in below.</p>
+        <p className="welcome-para">Welcome to VisitER, the online check-in system for non-life-threatening emergency room (ER) visits for children with Autism Spectrum Disorder (ASD). After electronically submitting your request to the triage staff, you will be given a wait time so that you may arrive in the ER once a physician is ready to see your child. This way you avoid waiting in the hospital, which may be unfamiliar and uncomfortable for your child.</p>
         <h2>Sign In</h2>
         <Form onSubmit={this.login} className="login-form">
           <Form.Item>
@@ -113,10 +119,16 @@ class Login extends Component {
               Login
           </Button>
           </Form.Item>
+          {this.state.serverResponse && <Alert
+            message="Error"
+            closable
+            type="error"
+            description={this.state.serverResponse}
+          />}
         </Form>
         <Button onClick={this.register}>Register</Button>
 
-      </div>
+      </main>
     );
   }
 }

@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     get '/data', to: 'tests#index' # /api/data
     post '/login', to: 'authentication#login'
 
+    post '/patient', to: 'patient#create'
+    post '/event', to: 'emergency_room_visit#create'
+    get '/event', to: 'emergency_room_visit#index'
+    post '/triage_question_answers', to: 'triage_question_answers#create'
+
     resources :users
 
     resources :triage_questions
