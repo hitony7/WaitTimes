@@ -101,7 +101,7 @@ class Caregiver extends Component {
           <h2 style={{color: 'red'}}>New ER Visit</h2>
           <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
           <h2>Pending ER Visits</h2>
-          <Table columns={columns} dataSource={visits} rowKey={visits => visits.id}/>
+          <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
           {/* <ul>
             {visits.map(visit => (
               <li key={visit.id}>
