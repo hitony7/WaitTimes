@@ -7,7 +7,7 @@ class Api::TriageQuestionAnswersController < ApplicationController
   def create
     saved = 0
     errors = 0
-    arr = JSON.parse(params[:items]) # convert our incoming string into the hash
+    arr = JSON.parse(CGI.unescape(params[:items])) # convert our incoming string into the hash
     arr.each do |i|
       @triage_question_answer = TriageQuestionAnswer.new
       @triage_question_answer.answer_text = i['answer_text']

@@ -115,20 +115,17 @@ class Event extends Component {
             this.setState({ serverResponse: 'Submitting info…' });
             const erVisitId = response.data.id;
             this.props.setVisitId(erVisitId);
-            // setTimeout(function () { //Start the timer
-            //   this.setState({ redirect: true }) //After 1 second, set redirect to true
-            // }.bind(this), 1000);
             let answersToSend = this.state.triageQuestionAnswers;
             answersToSend.forEach(ans => {
               ans.emergency_room_visits_id = erVisitId;
             });
             let formData = new FormData();
-            formData.append("items", JSON.stringify(answersToSend));
+            formData.append("items", escape(JSON.stringify(answersToSend)));
             console.log('answersToSend', answersToSend);
             return axios.post('api/triage_question_answers', formData, config)
             .then((response) => {
               this.setState({ serverResponse: 'Submitting info…' });
-              console.log(response);
+              // console.log(response);
               // setTimeout(function () { //Start the timer
               //   this.setState({ redirect: true }) //After 1 second, set redirect to true
               // }.bind(this), 1000);
@@ -138,7 +135,6 @@ class Event extends Component {
                 this.setState({ serverResponseErrors: error.response.data.errors });
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log('error response data', error.response.data.errors);
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
