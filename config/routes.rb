@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
     post '/patient', to: 'patient#create'
     post '/event', to: 'emergency_room_visit#create'
+    get '/event', to: 'emergency_room_visit#index'
     post '/triage_question_answers', to: 'triage_question_answers#create'
 
     resources :users
