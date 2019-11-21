@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Button, Table } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
@@ -10,7 +10,7 @@ class Caregiver extends Component {
     super(props);
     this.state = {
       redirect: false,
-      message: 'Welcome to the caregiver dashboard. Here you will see your existing ER requests (not yet implemented) and wait times as well as create new ones.',
+      message: 'Welcome to the caregiver dashboard. Here you can see your existing ER requests and associated wait times as well as create new ER visits.',
       error: null,
       isLoaded: false,
       visits: []
@@ -57,6 +57,32 @@ class Caregiver extends Component {
 
   render() {
     const { error, isLoaded, visits } = this.state;
+    const columns = [
+      {
+        title: 'Patient Name',
+        dataIndex: 'name'
+      },
+      {
+        title: 'Age',
+        dataIndex: 'age',
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+      },
+      {
+        title: 'Submission Date',
+        dataIndex: 'created_at',
+      },
+      {
+        title: 'Visit Description',
+        dataIndex: 'visit_description',
+      },
+      {
+        title: 'Given Wait Time (minutes)',
+        dataIndex: 'given_wait_time_minutes',
+      },
+    ];
     if (this.state.redirect) {
       return (<Redirect to='/patient' />)
     }
@@ -72,16 +98,17 @@ class Caregiver extends Component {
         <div>
           <h1>Caregiver Dashboard</h1>
           <p>{this.state.message}</p>
-          <h2>Pending ER Visits</h2>
-          <ul>
-            {visits.map(visit => (
-              <li key={visit.id}>
-    {visit.id} {visit.visit_description} {visit.given_wait_time_minutes} {visit.created_at}
-              </li>
-            ))}
-          </ul>
           <h2>New ER Visit</h2>
           <Button onClick={this.newVisit}>New Emergency Room Visit</Button>
+          <h2>Pending ER Visits</h2>
+          <Table columns={columns} dataSource={visits} />
+          {/* <ul>
+            {visits.map(visit => (
+              <li key={visit.id}>
+                {visit.id} {visit.visit_description} {visit.given_wait_time_minutes} {visit.created_at}
+              </li>
+            ))}
+          </ul> */}
         </div>
       );
     }

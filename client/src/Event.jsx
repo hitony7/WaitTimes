@@ -197,6 +197,19 @@ class Event extends Component {
           <h2>{this.state.message}</h2>
 
           <Form onSubmit={this.startEmergencyEvent} className="registration-form" layout="horizontal">
+          <Form.Item label="What is your main concern? Why do you want to bring your child in to be seen by an emergency physician?">
+              {getFieldDecorator('visit_description', {
+                rules: [{ required: false, message: 'Please input your answer!' }],
+              })(
+                <TextArea
+                  rows={3}
+                  name="visit_description"
+                  id="visit_description"
+                  type="text"
+                  required
+                />
+              )}
+            </Form.Item>
 
             {triageQuestions.map((question, idx) => (
               <Form.Item label={question.question_text} key={idx}>
@@ -211,19 +224,6 @@ class Event extends Component {
               </Form.Item>
             ))}
 
-            <Form.Item label="Any other comments?">
-              {getFieldDecorator('visit_description', {
-                rules: [{ required: false, message: 'Please input your answer!' }],
-              })(
-                <TextArea
-                  rows={3}
-                  name="visit_description"
-                  id="visit_description"
-                  type="text"
-                  required
-                />
-              )}
-            </Form.Item>
             <Form.Item>
               <Button htmlType="submit">
                 Submit

@@ -64,10 +64,6 @@ p "Created #{User.count} users!"
 TriageQuestion.destroy_all
 
 TriageQuestion.create!(
-  question_text: 'What is your main concern? Why do you want to bring your child in to be seen by an emergency physician?'
-)
-
-TriageQuestion.create!(
   question_text: 'Does your child already have a cast? Do they complain of it being too tight? Does it feel normal or tingly?'
 )
 TriageQuestion.create!(
