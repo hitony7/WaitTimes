@@ -29,7 +29,7 @@ class Admin extends Component {
         // handle success
         for (const item of response.data) { // let's do some date updating and name combining
           item.event_date = this.props.formatDateFromUTCString(item.event_date);
-          item.caregiver_name = item.caregiver_first_name + ' ' + item. caregiver_last_name;
+          item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
         }
         this.setState({
           isLoaded: true,
