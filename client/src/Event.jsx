@@ -193,12 +193,6 @@ class Event extends Component {
     } else {
       return (
         <div className="sign-in">
-          <Alert
-            message="Warning"
-            description={this.props.global_disclaimer}
-            type="error"
-            closable
-          />
           <h1>New ER Visit for {this.props.patient_name}</h1>
           <h2>{this.state.message}</h2>
 
