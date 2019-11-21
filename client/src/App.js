@@ -44,6 +44,12 @@ class App extends Component {
     this.setState({ er_visit_id: id });
   }
 
+  formatDateFromUTCString = date => {
+    // from https://stackoverflow.com/questions/50430968/converting-string-date-in-react-javascript
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    return new Date(date).toLocaleDateString([],options);
+  }
+
   logout = event => {
     event.preventDefault()
     // Remove the token from localStorage
@@ -70,11 +76,11 @@ class App extends Component {
           <Switch>
             <Route
               path="/admin"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} /> : <Redirect to='/' />}
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'triage_staff') ?  <Admin {...props} formatDateFromUTCString={this.formatDateFromUTCString}/> : <Redirect to='/' />}
             />
             <Route
               path="/caregiver"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} /> : <Redirect to='/' /> }
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} formatDateFromUTCString={this.formatDateFromUTCString}/> : <Redirect to='/' /> }
             />
             <Route
               path="/patient"

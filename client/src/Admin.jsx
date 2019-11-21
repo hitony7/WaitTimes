@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Table } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
@@ -7,11 +7,45 @@ import NOT_LOGGED_IN from './App.js';
 
 class Admin extends Component {
 
-  state = {
-    redirect: false,
-    message: 'Welcome to the triage admin panel. Here we will list all incoming ER-visit requests and assign them a wait time.',
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: false,
+      message: 'Here are all the incoming ER visit requests that we can assess and assign wait times to.',
+      error: null,
+      isLoaded: false,
+      visits: []
+    }
   }
 
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { 'Authorization': "Bearer " + token }
+    };
+    axios
+      .get('/api/events', config) // let's grab the triage questions from the database
+      .then(response => {
+        // handle success
+        for (const item of response.data) { // let's do some date updating and name combining
+          item.event_date = this.props.formatDateFromUTCString(item.event_date);
+          item.caregiver_name = item.caregiver_first_name + ' ' + item. caregiver_last_name;
+        }
+        this.setState({
+          isLoaded: true,
+          visits: response.data,
+        });
+      },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        });
+  }
 
   // componentDidUpdate() {
   //   if (this.state.redirect) {
@@ -21,6 +55,49 @@ class Admin extends Component {
 
 
   render() {
+    const { error, isLoaded, visits } = this.state;
+    const columns = [
+      {
+        title: 'Patient Name',
+        dataIndex: 'patient_name'
+      },
+      {
+        title: 'Age',
+        dataIndex: 'patient_age',
+        width: 100
+      },
+      {
+        title: 'Caregiver Name',
+        dataIndex: 'caregiver_name',
+      },
+      {
+        title: 'Phone Number',
+        dataIndex: 'phone',
+      },
+      {
+        title: 'Address',
+        dataIndex: 'patient_address',
+      },
+      {
+        title: 'Patient AHC Number',
+        dataIndex: 'patient_ahc_number',
+      },
+      {
+        title: 'Submission Date',
+        dataIndex: 'event_date',
+      },
+      {
+        title: 'Given Wait Time (minutes)',
+        dataIndex: 'given_wait_time_minutes',
+      },
+      {
+        title: 'Action',
+        key: 'operation',
+        fixed: 'right',
+        width: 100,
+        render: () => <a>Assign Wait Time</a>,
+      }
+    ];
     // const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
       return (<Redirect to='/admin' />)
@@ -28,12 +105,26 @@ class Admin extends Component {
     if (this.state.loggedInStatus === NOT_LOGGED_IN) {
       return (<Redirect to='/' />)
     }
-    return (
-      <main>
-        <h1>Admin Panel</h1>
-        <h2>{this.state.message}</h2>
-      </main>
-    );
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        <main>
+          <h1>Triage Admin Panel</h1>
+          <p>{this.state.message}</p>
+          <h2>Pending ER Visits</h2>
+          <Table
+            columns={columns}
+            dataSource={visits}
+            rowKey={visits => visits.id}
+            scroll={{ x: 1200 }}
+            expandedRowRender={record => <p style={{ margin: 0 }}>{record.visit_description}</p>}
+          />
+        </main>
+      );
+    }
   }
 }
 

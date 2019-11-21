@@ -26,7 +26,9 @@ class Caregiver extends Component {
       .get('/api/event', config) // let's grab the triage questions from the database
       .then(response => {
         // handle success
-        // console.log(response.data.message); // Just the message
+        for (const item of response.data) { // let's do some date updating
+          item.event_date = this.props.formatDateFromUTCString(item.event_date);
+        }
         this.setState({
           isLoaded: true,
           visits: response.data,
@@ -72,7 +74,7 @@ class Caregiver extends Component {
       },
       {
         title: 'Submission Date',
-        dataIndex: 'created_at',
+        dataIndex: 'event_date',
       },
       {
         title: 'Visit Description',
@@ -101,7 +103,7 @@ class Caregiver extends Component {
           <h2 style={{color: 'red'}}>New ER Visit</h2>
           <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
           <h2>Pending ER Visits</h2>
-          <Table columns={columns} dataSource={visits} rowKey={visits => visits.id}/>
+          <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
           {/* <ul>
             {visits.map(visit => (
               <li key={visit.id}>
