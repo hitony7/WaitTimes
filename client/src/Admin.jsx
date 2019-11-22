@@ -17,7 +17,7 @@ class Admin extends Component {
       areQuestionsLoaded: false,
       areAnswersLoaded: false,
       visits: [],
-      questions: [],
+      questions: {},
       answers: [],
       visible: false,
       current_patient: {},
@@ -56,12 +56,11 @@ class Admin extends Component {
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
         // handle success
-        for (const item of response.data) { // let's do some date updating and name combining
-          item.answer = 'not yet implemented';
-        }
+        const questionsArray = response.data;
+        const questionsObject = this.convertArrayToObject(questionsArray, "id");
         this.setState({
           areQuestionsLoaded: true,
-          questions: response.data,
+          questions: questionsObject,
         });
       },
         // Note: it's important to handle errors here
@@ -93,6 +92,16 @@ class Admin extends Component {
         });
   }
 
+  convertArrayToObject = (array, key) => {
+    const initialValue = {};
+    return array.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item[key]]: item,
+      };
+    }, initialValue);
+  };
+
   showModal = (record, e) => {
     this.setState({
       visible: true,
@@ -122,14 +131,20 @@ class Admin extends Component {
   getTriageQuestionAnswersForPatient = (state) => {
     const allAnswers = state.answers;
     let currentPatientsAnswers = [];
+    // first let's filter only for the current patient's answers
     allAnswers.forEach((answer) => {
       if (answer.emergency_room_visits_id === this.state.currentVisitId) currentPatientsAnswers.push(answer);
     });
+    // now lets merge in the corresponding triage question text
+    for (let answer of currentPatientsAnswers) {
+      answer.question_text = this.state.questions[answer.triage_questions_id].question_text;
+    };
+
     return currentPatientsAnswers;
   };
 
   render() {
-    const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits, questions } = this.state;
+    const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits } = this.state;
     const answers = this.getTriageQuestionAnswersForPatient(this.state);
     console.log(answers);
     const columns = [
