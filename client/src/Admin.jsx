@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Modal } from 'antd';
+import { Button, Table, Modal, Descriptions } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
@@ -11,7 +11,7 @@ class Admin extends Component {
     super(props);
     this.state = {
       redirect: false,
-      message: 'Here are all the incoming ER visit requests that we can assess and assign wait times to.',
+      message: 'Incoming ER visit requests are listed here. Please review cases, assess acuity, and assign an appropriate wait time.',
       error: null,
       isLoaded: false,
       visits: [],
@@ -111,18 +111,6 @@ class Admin extends Component {
         dataIndex: 'caregiver_name',
       },
       {
-        title: 'Phone Number',
-        dataIndex: 'phone',
-      },
-      {
-        title: 'Address',
-        dataIndex: 'patient_address',
-      },
-      {
-        title: 'Patient AHC Number',
-        dataIndex: 'patient_ahc_number',
-      },
-      {
         title: 'Submission Date',
         dataIndex: 'event_date',
       },
@@ -135,7 +123,7 @@ class Admin extends Component {
         key: 'operation',
         fixed: 'right',
         width: 100,
-        render: (record) => <Button type="primary" onClick={(e) => this.showModal(record, e)}>Actions</Button>,
+        render: (record) => <Button type="primary" onClick={(e) => this.showModal(record, e)}>Details</Button>,
       }
     ];
     const modalColumns = [
@@ -176,19 +164,33 @@ class Admin extends Component {
             width="700"
             onCancel={this.handleCancel}
           >
-    <p>{this.state.current_patient.patient_name}, {this.state.current_patient.patient_age}   {this.state.current_patient.id} </p>
-            <p>Description</p>
+            <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
+            <p>{this.state.current_patient.visit_description}</p>
+            <Descriptions title="Patient Info">
+              <Descriptions.Item label="Name">{this.state.current_patient.patient_name}</Descriptions.Item>
+              <Descriptions.Item label="Age">{this.state.current_patient.patient_age}</Descriptions.Item>
+              <Descriptions.Item label="AHC Number">{this.state.current_patient.patient_ahc_number}</Descriptions.Item>
+              <Descriptions.Item label="Address">{this.state.current_patient.patient_address}</Descriptions.Item>
+              <Descriptions.Item label="Gender">Update Me</Descriptions.Item>
+              <Descriptions.Item label="Allergies">Update Me</Descriptions.Item>
+            </Descriptions>
+            <Descriptions title="Caregiver Info">
+              <Descriptions.Item label="Name">{this.state.current_patient.caregiver_name}</Descriptions.Item>
+              <Descriptions.Item label="Phone Number">{this.state.current_patient.phone}</Descriptions.Item>
+              <Descriptions.Item label="Relationship">Update Me</Descriptions.Item>
+            </Descriptions>
+            <h2>Triage Question Answers</h2>
             <Table
-            columns={modalColumns}
-            dataSource={questions}
-            rowKey={questions => questions.id}
-          />
+              columns={modalColumns}
+              dataSource={questions}
+              rowKey={questions => questions.id}
+            />
           </Modal>
           <Table
             columns={columns}
             dataSource={visits}
             rowKey={visits => visits.id}
-            scroll={{ x: 1200 }}
+            // scroll={{ x: 1200 }}
           // expandedRowRender={record => <p style={{ margin: 0 }}>{record.visit_description}</p>}
           />
         </main>
