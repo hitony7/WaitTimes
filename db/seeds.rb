@@ -29,6 +29,19 @@ EmergencyRoom.create!(
   hospital_name: 'Alberta Children\'s Hospital',
   address: '28 Oki Dr, Calgary, AB T3B 6A8'
 )
+EmergencyRoom.create!(
+  hospital_name: 'Foothills Hospital',
+  address: '1403 29 St NW, Calgary, AB T2N 2T9'
+)
+EmergencyRoom.create!(
+  hospital_name: 'Peter Lougheed Hospital',
+  address: '3500 26 Ave NE, Calgary, AB T1Y 6J4'
+)
+EmergencyRoom.create!(
+  hospital_name: 'South Health Campus',
+  address: '4448 Front St SE, Calgary, AB T3M 1M4'
+)
+
 
 p "Created #{EmergencyRoom.count} Emergency Rooms!"
 
