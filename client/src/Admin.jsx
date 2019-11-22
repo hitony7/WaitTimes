@@ -13,11 +13,15 @@ class Admin extends Component {
       redirect: false,
       message: 'Incoming ER visit requests are listed here. Please review cases, assess acuity, and assign an appropriate wait time.',
       error: null,
-      isLoaded: false,
+      areEventsLoaded: false,
+      areQuestionsLoaded: false,
+      areAnswersLoaded: false,
       visits: [],
       questions: [],
+      answers: [],
       visible: false,
-      current_patient: {}
+      current_patient: {},
+      currentVisitId: null
     }
   }
 
@@ -35,7 +39,7 @@ class Admin extends Component {
           item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
         }
         this.setState({
-          isLoaded: true,
+          areEventsLoaded: true,
           visits: response.data,
         });
       },
@@ -44,7 +48,7 @@ class Admin extends Component {
         // exceptions from actual bugs in components.
         (error) => {
           this.setState({
-            isLoaded: true,
+            areEventsLoaded: true,
             error
           });
         });
@@ -56,7 +60,7 @@ class Admin extends Component {
           item.answer = 'not yet implemented';
         }
         this.setState({
-          isLoaded: true,
+          areQuestionsLoaded: true,
           questions: response.data,
         });
       },
@@ -65,7 +69,25 @@ class Admin extends Component {
         // exceptions from actual bugs in components.
         (error) => {
           this.setState({
-            isLoaded: true,
+            areQuestionsLoaded: true,
+            error
+          });
+        });
+    axios
+      .get('/api/triage_question_answers', config) // let's grab the triage questions from the database
+      .then(response => {
+        // handle success
+        this.setState({
+          areAnswersLoaded: true,
+          answers: response.data,
+        });
+      },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            areAnswersLoaded: true,
             error
           });
         });
@@ -74,7 +96,8 @@ class Admin extends Component {
   showModal = (record, e) => {
     this.setState({
       visible: true,
-      current_patient: Object.assign({}, record)
+      current_patient: Object.assign({}, record),
+      currentVisitId: record.id
     });
   };
 
@@ -82,7 +105,8 @@ class Admin extends Component {
     console.log(e);
     this.setState({
       visible: false,
-      current_patient: {}
+      current_patient: {},
+      currentVisitId: null
     });
   };
 
@@ -90,12 +114,24 @@ class Admin extends Component {
     console.log(e);
     this.setState({
       visible: false,
-      current_patient: {}
+      current_patient: {},
+      currentVisitId: null
     });
   };
 
+  getTriageQuestionAnswersForPatient = (state) => {
+    const allAnswers = state.answers;
+    let currentPatientsAnswers = [];
+    allAnswers.forEach((answer) => {
+      if (answer.emergency_room_visits_id === this.state.currentVisitId) currentPatientsAnswers.push(answer);
+    });
+    return currentPatientsAnswers;
+  };
+
   render() {
-    const { error, isLoaded, visits, questions } = this.state;
+    const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits, questions } = this.state;
+    const answers = this.getTriageQuestionAnswersForPatient(this.state);
+    console.log(answers);
     const columns = [
       {
         title: 'Patient Name',
@@ -130,7 +166,7 @@ class Admin extends Component {
     const modalColumns = [
       {
         title: 'Number',
-        dataIndex: 'id'
+        dataIndex: 'triage_questions_id'
       },
       {
         title: 'Question',
@@ -138,7 +174,7 @@ class Admin extends Component {
       },
       {
         title: 'Answer',
-        dataIndex: 'answer'
+        dataIndex: 'answer_text'
       }
     ]
     // const { getFieldDecorator } = this.props.form;
@@ -150,7 +186,7 @@ class Admin extends Component {
     }
     if (error) {
       return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    } else if (!areAnswersLoaded || !areEventsLoaded || !areQuestionsLoaded) {
       return <div>Loading...</div>;
     } else {
       return (
@@ -183,7 +219,7 @@ class Admin extends Component {
             <h2>Triage Question Answers</h2>
             <Table
               columns={modalColumns}
-              dataSource={questions}
+              dataSource={answers}
               rowKey={questions => questions.id}
             />
           </Modal>
@@ -191,7 +227,7 @@ class Admin extends Component {
             columns={columns}
             dataSource={visits}
             rowKey={visits => visits.id}
-            // scroll={{ x: 1200 }}
+          // scroll={{ x: 1200 }}
           // expandedRowRender={record => <p style={{ margin: 0 }}>{record.visit_description}</p>}
           />
         </main>
