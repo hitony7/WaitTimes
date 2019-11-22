@@ -111,7 +111,6 @@ class Admin extends Component {
   };
 
   handleOk = e => {
-    console.log(e);
     this.setState({
       visible: false,
       current_patient: {},
@@ -120,7 +119,6 @@ class Admin extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
       current_patient: {},
@@ -146,7 +144,6 @@ class Admin extends Component {
   render() {
     const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits } = this.state;
     const answers = this.getTriageQuestionAnswersForPatient(this.state);
-    console.log(answers);
     const columns = [
       {
         title: 'Patient Name',
