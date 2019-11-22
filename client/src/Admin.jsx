@@ -51,6 +51,9 @@ class Admin extends Component {
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
         // handle success
+        for (const item of response.data) { // let's do some date updating and name combining
+          item.answer = 'not yet implemented';
+        }
         this.setState({
           isLoaded: true,
           questions: response.data,
@@ -139,6 +142,10 @@ class Admin extends Component {
       {
         title: 'Question',
         dataIndex: 'question_text'
+      },
+      {
+        title: 'Answer',
+        dataIndex: 'answer'
       }
     ]
     // const { getFieldDecorator } = this.props.form;
@@ -162,6 +169,7 @@ class Admin extends Component {
             title="Details"
             visible={this.state.visible}
             onOk={this.handleOk}
+            width="700"
             onCancel={this.handleCancel}
           >
             <p>Patient Name, Age from state</p>
