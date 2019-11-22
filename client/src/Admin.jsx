@@ -16,7 +16,8 @@ class Admin extends Component {
       isLoaded: false,
       visits: [],
       questions: [],
-      visible: false
+      visible: false,
+      current_patient: {}
     }
   }
 
@@ -70,9 +71,10 @@ class Admin extends Component {
         });
   }
 
-  showModal = () => {
+  showModal = (record, e) => {
     this.setState({
       visible: true,
+      current_patient: Object.assign({}, record)
     });
   };
 
@@ -80,6 +82,7 @@ class Admin extends Component {
     console.log(e);
     this.setState({
       visible: false,
+      current_patient: {}
     });
   };
 
@@ -87,6 +90,7 @@ class Admin extends Component {
     console.log(e);
     this.setState({
       visible: false,
+      current_patient: {}
     });
   };
 
@@ -131,7 +135,7 @@ class Admin extends Component {
         key: 'operation',
         fixed: 'right',
         width: 100,
-        render: () => <Button type="primary" onClick={this.showModal}>Actions</Button>,
+        render: (record) => <Button type="primary" onClick={(e) => this.showModal(record, e)}>Actions</Button>,
       }
     ];
     const modalColumns = [
@@ -172,7 +176,7 @@ class Admin extends Component {
             width="700"
             onCancel={this.handleCancel}
           >
-            <p>Patient Name, Age from state</p>
+    <p>{this.state.current_patient.patient_name}, {this.state.current_patient.patient_age}   {this.state.current_patient.id} </p>
             <p>Description</p>
             <Table
             columns={modalColumns}
