@@ -92,7 +92,7 @@ class Admin extends Component {
         });
   }
 
-  convertArrayToObject = (array, key) => {
+  convertArrayToObject = (array, key) => { // from https://dev.to/afewminutesofcode/how-to-convert-an-array-into-an-object-in-javascript-25a4
     const initialValue = {};
     return array.reduce((obj, item) => {
       return {
