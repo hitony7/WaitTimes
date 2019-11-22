@@ -63,30 +63,6 @@ class Event extends Component {
   }
 
 
-  // componentDidUpdate() {
-  //   if (this.state.redirect) {
-  //     this.setState({ redirect: false })
-  //   }
-  // }
-
-  // getTriageQuestions = () => {
-  //   const token = localStorage.getItem("token");
-  //   const config = {
-  //     headers: { 'Authorization': "Bearer " + token }
-  //   };
-  //   // console.log(config);
-  //   axios
-  //     .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
-  //     .then(response => {
-  //       // handle success
-  //       // console.log(response.data); // The entire response from the Rails API
-  //       // console.log(response.data.message); // Just the message
-  //       this.setState({
-  //         triageQuestions: response.data
-  //       });
-  //     });
-  // };
-
   handleTriageQuestionAnswerChange = idx => evt => {
     const newAnswer = this.state.triageQuestionAnswers.map((answer, aidx) => {
       if (idx - 1 !== aidx) return answer; // indices in PostgreSQL start at 1 not 0
@@ -229,6 +205,7 @@ class Event extends Component {
               description="You are about to submit this information to the triage staff. Once submitted, you will not be able to change this information."
               type="warning"
               showIcon
+              className="margin-bottom"
             />
 
             <Form.Item>
