@@ -128,7 +128,7 @@ class Patient extends Component {
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('ahc_number', {
-              rules: [{ required: true, max: 10, message: 'Please input your patient’s AHC number (up to 10 digits)!' }],
+              rules: [{ required: true, max: 9, message: 'Please input your patient’s AHC number (up to 10 digits)!' }],
             })(
               <Input
                 prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
