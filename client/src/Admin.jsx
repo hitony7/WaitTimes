@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Modal, Descriptions } from 'antd';
+import { Button, Table, Modal, Descriptions, Tag } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
@@ -117,6 +117,7 @@ class Admin extends Component {
       {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
+        render: () => <Tag color="red">UNASSIGNED</Tag>
       },
       {
         title: 'Action',
@@ -128,7 +129,7 @@ class Admin extends Component {
     ];
     const modalColumns = [
       {
-        title: 'Question No.',
+        title: 'Number',
         dataIndex: 'id'
       },
       {
@@ -161,7 +162,7 @@ class Admin extends Component {
             title="Details"
             visible={this.state.visible}
             onOk={this.handleOk}
-            width="700"
+            width={900}
             onCancel={this.handleCancel}
           >
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
