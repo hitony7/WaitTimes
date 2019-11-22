@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get '/event', to: 'emergency_room_visit#myevents'
     get '/events', to: 'emergency_room_visit#allevents'
     post '/triage_question_answers', to: 'triage_question_answers#create'
+    get '/triage_question_answers', to: 'triage_question_answers#index'
 
     resources :users
 
