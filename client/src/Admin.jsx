@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Button, Table, Modal } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
@@ -14,7 +14,9 @@ class Admin extends Component {
       message: 'Here are all the incoming ER visit requests that we can assess and assign wait times to.',
       error: null,
       isLoaded: false,
-      visits: []
+      visits: [],
+      questions: [],
+      visible: false
     }
   }
 
@@ -45,17 +47,48 @@ class Admin extends Component {
             error
           });
         });
+    axios
+      .get('/api/triage_questions', config) // let's grab the triage questions from the database
+      .then(response => {
+        // handle success
+        this.setState({
+          isLoaded: true,
+          questions: response.data,
+        });
+      },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        });
   }
 
-  // componentDidUpdate() {
-  //   if (this.state.redirect) {
-  //     this.setState({ redirect: false })
-  //   }
-  // }
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
 
   render() {
-    const { error, isLoaded, visits } = this.state;
+    const { error, isLoaded, visits, questions } = this.state;
     const columns = [
       {
         title: 'Patient Name',
@@ -95,9 +128,19 @@ class Admin extends Component {
         key: 'operation',
         fixed: 'right',
         width: 100,
-        render: () => <a>Assign Wait Time</a>,
+        render: () => <Button type="primary" onClick={this.showModal}>Actions</Button>,
       }
     ];
+    const modalColumns = [
+      {
+        title: 'Question No.',
+        dataIndex: 'id'
+      },
+      {
+        title: 'Question',
+        dataIndex: 'question_text'
+      }
+    ]
     // const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
       return (<Redirect to='/admin' />)
@@ -115,12 +158,26 @@ class Admin extends Component {
           <h1>Triage Admin Panel</h1>
           <p>{this.state.message}</p>
           <h2>Pending ER Visits</h2>
+          <Modal
+            title="Details"
+            visible={this.state.visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+          >
+            <p>Patient Name, Age from state</p>
+            <p>Description</p>
+            <Table
+            columns={modalColumns}
+            dataSource={questions}
+            rowKey={questions => questions.id}
+          />
+          </Modal>
           <Table
             columns={columns}
             dataSource={visits}
             rowKey={visits => visits.id}
             scroll={{ x: 1200 }}
-            expandedRowRender={record => <p style={{ margin: 0 }}>{record.visit_description}</p>}
+          // expandedRowRender={record => <p style={{ margin: 0 }}>{record.visit_description}</p>}
           />
         </main>
       );
