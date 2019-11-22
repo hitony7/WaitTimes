@@ -29,7 +29,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
     render json: @ervisit
   end
 
-  # GET /event; only gives events for currently logged in user
+  # GET /events; only gives events for currently logged in user
   def allevents
     if @current_user.role == 'triage_staff'
       @ervisit = EmergencyRoomVisit
