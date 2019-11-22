@@ -171,13 +171,13 @@ class Admin extends Component {
               <Descriptions.Item label="Age">{this.state.current_patient.patient_age}</Descriptions.Item>
               <Descriptions.Item label="AHC Number">{this.state.current_patient.patient_ahc_number}</Descriptions.Item>
               <Descriptions.Item label="Address">{this.state.current_patient.patient_address}</Descriptions.Item>
-              <Descriptions.Item label="Gender">Update Me</Descriptions.Item>
-              <Descriptions.Item label="Allergies">Update Me</Descriptions.Item>
+              <Descriptions.Item label="Gender">{this.state.current_patient.gender}</Descriptions.Item>
+              <Descriptions.Item label="Allergies">{this.state.current_patient.allergies}</Descriptions.Item>
             </Descriptions>
             <Descriptions title="Caregiver Info">
               <Descriptions.Item label="Name">{this.state.current_patient.caregiver_name}</Descriptions.Item>
               <Descriptions.Item label="Phone Number">{this.state.current_patient.phone}</Descriptions.Item>
-              <Descriptions.Item label="Relationship">Update Me</Descriptions.Item>
+              <Descriptions.Item label="Relationship">{this.state.current_patient.caregiver_relationship}</Descriptions.Item>
             </Descriptions>
             <h2>Triage Question Answers</h2>
             <Table
