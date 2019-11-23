@@ -77,6 +77,10 @@ main h2 {
     width: 90%;
     margin: 0 auto;
   }
+  .login-form {
+    width:400px;
+    margin: 0 auto !important;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
