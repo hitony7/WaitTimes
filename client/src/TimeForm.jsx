@@ -102,7 +102,7 @@ class HorizontalLoginForm extends React.Component {
     // const triage_comment_error = isFieldTouched('triage_comments') && getFieldError('triage_comments');
     // console.log("my wait tims is", this.props.waitTime);
     if (this.props.waitTime || this.state.hideForm) {
-    return (<h2 className="red">A wait time of {this.state.waitTime} minutes has been assigned with comment "{this.state.triageComments}".</h2>);
+    return (<h2 className="red">A wait time of {this.state.waitTime} minutes has been assigned with comment "{this.state.triageComments}"</h2>);
     }
     else {
       return (
