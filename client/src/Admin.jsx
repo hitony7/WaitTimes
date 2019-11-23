@@ -165,7 +165,11 @@ class Admin extends Component {
       {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
-        render: () => <Tag color="red">UNASSIGNED</Tag>
+        render: (given_wait_time_minutes) => (
+          <div>
+          {given_wait_time_minutes ? given_wait_time_minutes : <Tag color="red">UNASSIGNED</Tag>}
+          </div>
+        )
       },
       {
         title: 'Action',
