@@ -36,6 +36,7 @@ class Admin extends Component {
       // handle success
       for (const item of response.data) { // let's do some date updating and name combining
         item.event_date = this.props.formatDateFromUTCString(item.event_date);
+        item.updated_date = this.props.formatDateFromUTCString(item.updated_date);
         item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
       }
       this.setState({
@@ -167,6 +168,10 @@ class Admin extends Component {
         dataIndex: 'event_date',
       },
       {
+        title: 'Wait Time Assigned',
+        dataIndex: 'updated_date',
+      },
+      {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
         render: (given_wait_time_minutes) => (
@@ -221,6 +226,7 @@ class Admin extends Component {
             width={900}
             onCancel={this.handleCancel}
           >
+            <h2>Assign a Wait Time</h2>
             <WrappedHorizontalLoginForm visitId={this.state.currentVisitId} getVisits={this.getVisits} />
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
             <p>{this.state.current_patient.visit_description}</p>
