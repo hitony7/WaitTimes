@@ -40,7 +40,10 @@ class Patient extends Component {
           "ahc_number": values.ahc_number,
           "address": values.address,
           "name": values.name,
-          "age": values.age
+          "age": values.age,
+          "allergies": values.allergies,
+          "gender": values.gender,
+          "caregiver_relationship": values.caregiver_relationship
         };
         // console.log(requestJSONobj);
         const token = localStorage.getItem("token");
@@ -146,6 +149,45 @@ class Patient extends Component {
                 id="address"
                 type="text"
                 placeholder="Address"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator('gender', {
+              rules: [{ required: true, message: 'Please input your patient’s gender!' }],
+            })(
+              <Input
+                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                name="gender"
+                id="gender"
+                type="text"
+                placeholder="Gender"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator('allergies', {
+              rules: [{ required: true, message: 'Please input your patient’s allergies!' }],
+            })(
+              <Input
+                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                name="allergies"
+                id="allergies"
+                type="text"
+                placeholder="Allergies"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator('caregiver_relationship', {
+              rules: [{ required: true, message: 'Please input your relationship to the patient!' }],
+            })(
+              <Input
+                prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                name="caregiver_relationship"
+                id="caregiver_relationship"
+                type="text"
+                placeholder="Your relationship to the patient"
               />
             )}
           </Form.Item>

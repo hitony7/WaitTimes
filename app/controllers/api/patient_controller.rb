@@ -10,6 +10,9 @@ class Api::PatientController < ApplicationController
     @patient.address = params[:address]
     @patient.age = params[:age]
     @patient.name = params[:name]
+    @patient.gender = params[:gender]
+    @patient.allergies = params[:allergies]
+    @patient.caregiver_relationship = params[:caregiver_relationship]
     @patient.users_id = @current_user.id
 
     if @patient.save
@@ -24,7 +27,7 @@ class Api::PatientController < ApplicationController
 
   def patient_params
     params.permit(
-      :ahc_number, :address, :age, :name
+      :ahc_number, :address, :age, :name, :gender, :allergies, :caregiver_relationship
     )
   end
 end
