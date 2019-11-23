@@ -10,9 +10,7 @@ import Event from './Event.jsx';
 import Caregiver from './Caregiver.jsx';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Redirect } from "react-router-dom";
-// import { ActionCableProvider } from "actioncable-client-react";
-import ActionCable from "actioncable";
-// import ChatRoom from "./ChatRoom.jsx";
+// import ActionCable from "action-cable-react-jwt";
 
 
 const LOGGED_IN = 'LOGGED_IN';
@@ -20,8 +18,6 @@ const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
 let jwt_token = localStorage.getItem("token");
 
 class App extends Component {
-
-
 
   constructor(props) {
     super(props);
@@ -37,23 +33,23 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable');
-    this.sub = cable.subscriptions.create('NotesChannel', {
-      received: this.handleReceiveNewText
-    })
-  }
+  // componentDidMount() {
+  //   const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', jwt_token);
+  //   this.sub = cable.subscriptions.create('NotesChannel', {
+  //     received: this.handleReceiveNewText
+  //   })
+  // }
 
-  handleReceiveNewText = ({ text }) => {
-    if (text !== this.state.text) {
-      this.setState({ text })
-    }
-  }
+  // handleReceiveNewText = ({ text }) => {
+  //   if (text !== this.state.text) {
+  //     this.setState({ text })
+  //   }
+  // }
 
-  handleChange = e => {
-    this.setState({ text: e.target.value })
-    this.sub.send({ text: e.target.value, id: 1 })
-  }
+  // handleChange = e => {
+  //   this.setState({ text: e.target.value })
+  //   this.sub.send({ text: e.target.value, id: 1 })
+  // }
 
   setUser = email => {
     this.setState({ email: email });
@@ -98,10 +94,6 @@ class App extends Component {
           }</div>
         </nav>
         <div className="App">
-          <textarea
-            value={this.state.text}
-            onChange={this.handleChange}
-          />
           <Switch>
             <Route
               path="/admin"

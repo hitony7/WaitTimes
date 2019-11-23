@@ -3,6 +3,7 @@ import { Button, Table } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
+import ActionCable from "action-cable-react-jwt";
 
 class Caregiver extends Component {
 
@@ -13,12 +14,29 @@ class Caregiver extends Component {
       message: 'Welcome to the caregiver dashboard. Here you can see your existing ER requests and associated wait times as well as create new ER visits.',
       error: null,
       isLoaded: false,
-      visits: []
+      visits: [],
+      text: ''
     }
+  }
+
+
+  handleReceiveNewText = ({ text }) => {
+    if (text !== this.state.text) {
+      this.setState({ text })
+    }
+  }
+
+  handleChange = e => {
+    this.setState({ text: e.target.value })
+    this.sub.send({ text: e.target.value, id: 1 })
   }
 
   componentDidMount() {
     const token = localStorage.getItem("token");
+    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', token);
+    this.sub = cable.subscriptions.create('NotesChannel', {
+      received: this.handleReceiveNewText
+    })
     const config = {
       headers: { 'Authorization': "Bearer " + token }
     };
@@ -99,8 +117,12 @@ class Caregiver extends Component {
       return (
         <main>
           <h1>Caregiver Dashboard</h1>
+          <textarea
+            value={this.state.text}
+            onChange={this.handleChange}
+          />
           <p>{this.state.message}</p>
-          <h2 style={{color: 'red'}}>New ER Visit</h2>
+          <h2 style={{ color: 'red' }}>New ER Visit</h2>
           <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
           <h2>Pending ER Visits</h2>
           <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
