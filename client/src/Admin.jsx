@@ -3,6 +3,7 @@ import { Button, Table, Modal, Descriptions, Tag } from 'antd';
 import { Redirect } from "react-router-dom";
 // import $ from 'jquery';
 import axios from 'axios';
+import WrappedHorizontalLoginForm from './TimeForm.jsx';
 import NOT_LOGGED_IN from './App.js';
 
 class Admin extends Component {
@@ -167,7 +168,7 @@ class Admin extends Component {
         dataIndex: 'given_wait_time_minutes',
         render: (given_wait_time_minutes) => (
           <div>
-          {given_wait_time_minutes ? given_wait_time_minutes : <Tag color="red">UNASSIGNED</Tag>}
+            {given_wait_time_minutes ? given_wait_time_minutes : <Tag color="red">UNASSIGNED</Tag>}
           </div>
         )
       },
@@ -217,6 +218,7 @@ class Admin extends Component {
             width={900}
             onCancel={this.handleCancel}
           >
+            <WrappedHorizontalLoginForm visitId={this.state.currentVisitId} />
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
             <p>{this.state.current_patient.visit_description}</p>
             <Descriptions title="Patient Info">
