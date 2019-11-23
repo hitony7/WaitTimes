@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "actioncable": "^5.2.3",
     "antd": "^3.25.0",
     "axios": "^0.18.1",
     "jquery": "^3.4.1",
