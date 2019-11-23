@@ -63,30 +63,6 @@ class Event extends Component {
   }
 
 
-  // componentDidUpdate() {
-  //   if (this.state.redirect) {
-  //     this.setState({ redirect: false })
-  //   }
-  // }
-
-  // getTriageQuestions = () => {
-  //   const token = localStorage.getItem("token");
-  //   const config = {
-  //     headers: { 'Authorization': "Bearer " + token }
-  //   };
-  //   // console.log(config);
-  //   axios
-  //     .get('/api/triage_questions', config) // You can simply make your requests to "/api/whatever you want"
-  //     .then(response => {
-  //       // handle success
-  //       // console.log(response.data); // The entire response from the Rails API
-  //       // console.log(response.data.message); // Just the message
-  //       this.setState({
-  //         triageQuestions: response.data
-  //       });
-  //     });
-  // };
-
   handleTriageQuestionAnswerChange = idx => evt => {
     const newAnswer = this.state.triageQuestionAnswers.map((answer, aidx) => {
       if (idx - 1 !== aidx) return answer; // indices in PostgreSQL start at 1 not 0
@@ -123,33 +99,33 @@ class Event extends Component {
             let formData = new FormData();
             formData.append("items", escape(JSON.stringify(answersToSend)));
             return axios.post('api/triage_question_answers', formData, config)
-            .then((response) => {
-              this.setState({ serverResponse: 'Submitting info…' });
-              // console.log(response);
-              setTimeout(function () { //Start the timer
-                this.setState({ redirect: true }) //After 1 second, set redirect to true
-              }.bind(this), 1000);
-            })
-            .catch((error) => {
-              if (error.response) {
-                this.setState({ serverResponseErrors: error.response.data.errors });
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-    
-              } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-              }
-              console.log(error.config);
-            });
+              .then((response) => {
+                this.setState({ serverResponse: 'Submitting info…' });
+                // console.log(response);
+                setTimeout(function () { //Start the timer
+                  this.setState({ redirect: true }) //After 1 second, set redirect to true
+                }.bind(this), 1000);
+              })
+              .catch((error) => {
+                if (error.response) {
+                  this.setState({ serverResponseErrors: error.response.data.errors });
+                  // The request was made and the server responded with a status code
+                  // that falls out of the range of 2xx
+                  console.log(error.response.data);
+                  console.log(error.response.status);
+                  console.log(error.response.headers);
+
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                  // http.ClientRequest in node.js
+                  console.log(error.request);
+                } else {
+                  // Something happened in setting up the request that triggered an Error
+                  console.log('Error', error.message);
+                }
+                console.log(error.config);
+              });
           })
           .catch((error) => {
             if (error.response) {
@@ -197,7 +173,7 @@ class Event extends Component {
           <h2>{this.state.message}</h2>
 
           <Form onSubmit={this.startEmergencyEvent} className="registration-form" layout="horizontal">
-          <Form.Item label="What is your main concern? Why do you want to bring your child in to be seen by an emergency physician?">
+            <Form.Item label="What is your main concern? Why do you want to bring your child in to be seen by an emergency physician?">
               {getFieldDecorator('visit_description', {
                 rules: [{ required: false, message: 'Please input your answer!' }],
               })(
@@ -224,10 +200,16 @@ class Event extends Component {
               </Form.Item>
             ))}
 
+            <Alert
+              message="Warning"
+              description="You are about to submit this information to the triage staff. Once submitted, you will not be able to change this information."
+              type="warning"
+              showIcon
+              className="margin-bottom"
+            />
+
             <Form.Item>
-              <Button htmlType="submit">
-                Submit
-          </Button>
+              <Button htmlType="submit" type="danger">Submit</Button>
             </Form.Item>
             {this.state.serverResponse && <Alert
               message="Event Initiation Succesful"

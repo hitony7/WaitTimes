@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_21_013243) do
+ActiveRecord::Schema.define(version: 2019_11_23_000407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2019_11_21_013243) do
     t.bigint "emergency_rooms_id"
     t.boolean "is_active", default: true
     t.bigint "patients_id"
+    t.string "triage_comment"
     t.index ["emergency_rooms_id"], name: "index_emergency_room_visits_on_emergency_rooms_id"
     t.index ["patients_id"], name: "index_emergency_room_visits_on_patients_id"
     t.index ["users_id"], name: "index_emergency_room_visits_on_users_id"
@@ -42,6 +43,9 @@ ActiveRecord::Schema.define(version: 2019_11_21_013243) do
     t.datetime "updated_at", null: false
     t.bigint "users_id"
     t.string "name"
+    t.string "allergies"
+    t.string "gender"
+    t.string "caregiver_relationship"
     t.index ["users_id"], name: "index_patients_on_users_id"
   end
 

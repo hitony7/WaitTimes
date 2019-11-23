@@ -28,7 +28,16 @@ class Api::TriageQuestionAnswersController < ApplicationController
       render json: "#{errors} errors occured", status: :unprocessable_entity
     end
   end
-  
+
+  # GET /triage_question_answers
+  def index
+    @triage_question_answers = if @current_user.role == 'triage_staff'
+                                 TriageQuestionAnswer.all
+                               else
+                                 'You do not have permission to perform this query.'
+                               end
+    render json: @triage_question_answers
+  end
 
   private
 
