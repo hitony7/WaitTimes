@@ -41,11 +41,28 @@ class Api::EmergencyRoomVisitController < ApplicationController
     render json: @ervisit
   end
 
+  # POST /ervisit/id
+  def update_event
+    if @current_user.role == 'triage_staff'
+      @visit = EmergencyRoomVisit.find(params[:id])
+      @visit.triage_comment = params[:triage_comment]
+      @visit.given_wait_time_minutes = params[:given_wait_time_minutes]
+      if @visit.save
+        render json: @visit
+      else
+        render json: { errors: @visit.errors.full_messages },
+               status: :unprocessable_entity
+      end
+    else
+      render json: 'You do not have permission to perform this query.'
+    end
+  end
+
   private
 
   def emergency_room_visit_params
     params.permit(
-      :visit_description, :given_wait_time_minutes, :users_id, :emergency_rooms_id, :patients_id
+      :id, :visit_description, :given_wait_time_minutes, :users_id, :emergency_rooms_id, :patients_id, :triage_comment
     )
   end
 end
