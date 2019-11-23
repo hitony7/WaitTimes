@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { Button, Table, Modal, Descriptions, Tag } from 'antd';
 import { Redirect } from "react-router-dom";
-// import $ from 'jquery';
 import axios from 'axios';
 import WrappedHorizontalLoginForm from './TimeForm.jsx';
 import NOT_LOGGED_IN from './App.js';
 
+const token = localStorage.getItem("token");
+const config = {
+  headers: { 'Authorization': "Bearer " + token }
+};
 class Admin extends Component {
 
   constructor(props) {
@@ -26,33 +29,33 @@ class Admin extends Component {
     }
   }
 
-  componentDidMount() {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: { 'Authorization': "Bearer " + token }
-    };
+  getVisits = () => {
     axios
-      .get('/api/events', config) // let's grab the triage questions from the database
-      .then(response => {
-        // handle success
-        for (const item of response.data) { // let's do some date updating and name combining
-          item.event_date = this.props.formatDateFromUTCString(item.event_date);
-          item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
-        }
+    .get('/api/events', config) // let's grab the triage questions from the database
+    .then(response => {
+      // handle success
+      for (const item of response.data) { // let's do some date updating and name combining
+        item.event_date = this.props.formatDateFromUTCString(item.event_date);
+        item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
+      }
+      this.setState({
+        areEventsLoaded: true,
+        visits: response.data,
+      });
+    },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
         this.setState({
           areEventsLoaded: true,
-          visits: response.data,
+          error
         });
-      },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            areEventsLoaded: true,
-            error
-          });
-        });
+      });
+  }
+
+  componentDidMount() {
+    this.getVisits();
     axios
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
@@ -218,7 +221,7 @@ class Admin extends Component {
             width={900}
             onCancel={this.handleCancel}
           >
-            <WrappedHorizontalLoginForm visitId={this.state.currentVisitId} />
+            <WrappedHorizontalLoginForm visitId={this.state.currentVisitId} getVisits={this.getVisits} />
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
             <p>{this.state.current_patient.visit_description}</p>
             <Descriptions title="Patient Info">

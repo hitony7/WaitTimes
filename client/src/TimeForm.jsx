@@ -16,7 +16,7 @@ class HorizontalLoginForm extends React.Component {
     this.props.form.validateFields();
   }
 
-  handleSubmit = e => {
+  assignWaitTime = e => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const config = {
@@ -31,12 +31,12 @@ class HorizontalLoginForm extends React.Component {
         };
         axios.post('api/ervisit/' + this.props.visitId, querystring.stringify(requestJSONobj), config)
           .then((response) => {
-            this.setState({ serverResponse: 'Submitting info…' });
             // console.log(response);
+            // console.log('stuff')
+            this.props.getVisits();
           })
           .catch((error) => {
             if (error.response) {
-              this.setState({ serverResponseErrors: error.response.data.errors });
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
               console.log(error.response.data);
@@ -65,7 +65,7 @@ class HorizontalLoginForm extends React.Component {
     const visit_time_error = isFieldTouched('wait_time') && getFieldError('wait_time');
     const triage_comment_error = isFieldTouched('triage_comments') && getFieldError('triage_comments');
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit}>
+      <Form layout="inline" onSubmit={this.assignWaitTime}>
         <Form.Item validateStatus={visit_time_error ? 'error' : ''} help={visit_time_error || ''}>
           {getFieldDecorator('wait_time', {
             rules: [{ required: true, message: 'Please input the wait time!' }],
