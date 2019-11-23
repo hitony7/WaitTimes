@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import WrappedHorizontalLoginForm from './TimeForm.jsx';
 import NOT_LOGGED_IN from './App.js';
+import ActionCable from "action-cable-react-jwt";
 
 class Admin extends Component {
 
@@ -21,8 +22,20 @@ class Admin extends Component {
       answers: [],
       visible: false,
       current_patient: {},
-      currentVisitId: null
+      currentVisitId: null,
+      text: ''
     }
+  }
+
+  handleReceiveNewText = ({ text }) => {
+    if (text !== this.state.text) {
+      this.setState({ text })
+    }
+  }
+
+  handleChange = e => {
+    this.setState({ text: e.target.value })
+    this.sub.send({ text: e.target.value, id: 1 })
   }
 
   getVisits = () => {
@@ -57,6 +70,10 @@ class Admin extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem("token");
+    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', token);
+    this.sub = cable.subscriptions.create('NotesChannel', {
+      received: this.handleReceiveNewText
+    })
     const config = {
       headers: { 'Authorization': "Bearer " + token }
     };
@@ -221,6 +238,10 @@ class Admin extends Component {
       return (
         <main>
           <h1>Triage Admin Panel</h1>
+          <textarea
+            value={this.state.text}
+            onChange={this.handleChange}
+          />
           <p>{this.state.message}</p>
           <h2>Pending ER Visits</h2>
           <Modal
