@@ -10,6 +10,8 @@ module ApplicationCable
 
     private
 
+    # from https://itnext.io/actioncable-authentication-in-a-token-based-rails-api-f9cc4b8bf560
+    # and https://engineering.musefind.com/make-your-rails-app-real-time-in-under-ten-minutes-cd5bd4a47f61
     def find_verified_user
       token = request.headers[:HTTP_SEC_WEBSOCKET_PROTOCOL].split(' ').last
       decoded_token = JsonWebToken.decode(token)
