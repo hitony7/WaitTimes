@@ -34,7 +34,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
     if @current_user.role == 'triage_staff'
       @ervisit = EmergencyRoomVisit
                  .where('emergency_room_visits.is_active = ?', true).joins(:patient).joins(:user)
-                 .select('emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.updated_at AS updated_date, emergency_room_visits.created_at AS event_date, emergency_room_visits.patients_id, patients.address AS patient_address, patients.name AS patient_name, patients.allergies, patients.gender, patients.caregiver_relationship, patients.ahc_number AS patient_ahc_number, patients.name AS patient_name, patients.age AS patient_age, users.first_name AS caregiver_first_name, users.last_name AS caregiver_last_name, users.phone').order('emergency_room_visits.created_at DESC')
+                 .select('emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.updated_at AS updated_date, emergency_room_visits.created_at AS event_date, emergency_room_visits.triage_comment, emergency_room_visits.patients_id, patients.address AS patient_address, patients.name AS patient_name, patients.allergies, patients.gender, patients.caregiver_relationship, patients.ahc_number AS patient_ahc_number, patients.name AS patient_name, patients.age AS patient_age, users.first_name AS caregiver_first_name, users.last_name AS caregiver_last_name, users.phone').order('emergency_room_visits.created_at DESC')
     else
       @ervisit = 'You do not have permission to perform this query.'
     end
