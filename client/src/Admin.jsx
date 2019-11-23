@@ -218,7 +218,7 @@ class Admin extends Component {
             <Descriptions title="Patient Info">
               <Descriptions.Item label="Name">{this.state.current_patient.patient_name}</Descriptions.Item>
               <Descriptions.Item label="Age">{this.state.current_patient.patient_age}</Descriptions.Item>
-              <Descriptions.Item label="AHC Number">{this.state.current_patient.patient_ahc_number}</Descriptions.Item>
+              <Descriptions.Item label="Healthcare Number">{this.state.current_patient.patient_ahc_number}</Descriptions.Item>
               <Descriptions.Item label="Address">{this.state.current_patient.patient_address}</Descriptions.Item>
               <Descriptions.Item label="Gender">{this.state.current_patient.gender}</Descriptions.Item>
               <Descriptions.Item label="Allergies">{this.state.current_patient.allergies}</Descriptions.Item>
