@@ -106,7 +106,7 @@ class HorizontalLoginForm extends React.Component {
     }
     else {
       return (
-        <><h2 className="red">Assign a Wait Time</h2>
+        <><h2 className="red">Assign a wait time (may only be submitted once)</h2>
           <Form layout="inline" onSubmit={this.assignWaitTime}>
             <Form.Item label="Assign wait time" key={this.props.visitId}>
               {getFieldDecorator('wait_time', {
@@ -131,7 +131,7 @@ class HorizontalLoginForm extends React.Component {
               )}
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="danger" htmlType="submit">
                 Submit
           </Button>
             </Form.Item>
