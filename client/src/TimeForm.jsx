@@ -6,14 +6,45 @@ import { Form, Icon, Input, Button } from 'antd';
 import axios from 'axios';
 const querystring = require('querystring');
 
-function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
-
 class HorizontalLoginForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      waitTime: "",
+      triageComments: "",
+      hideForm: false
+    }
+  }
+
+  fetchData = () => {
+    this.setState({
+      waitTime: this.props.waitTime,
+      triageComments: this.props.triageComments,
+    });
+  }
+
   componentDidMount() {
-    // To disabled submit button at the beginning.
-    this.props.form.validateFields();
+    this.setState({
+      waitTime: this.props.waitTime,
+      triageComments: this.props.triageComments,
+    });
+    // this.props.form.setFieldsValue({
+    //   wait_time: this.props.waitTime,
+    //   triageComments: this.props.triageComments,
+    // })
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.visitId !== prevProps.visitId) {
+      this.fetchData();
+      if(!this.props.waitTime) {
+        this.setState({
+          hideForm: false,
+        });
+      }
+    }
   }
 
   assignWaitTime = e => {
@@ -33,7 +64,12 @@ class HorizontalLoginForm extends React.Component {
           .then((response) => {
             // console.log(response);
             // console.log('stuff')
-            this.props.getVisits();
+            this.props.getVisits(); // force parent Admin.jsx to re-fetch ALL visits…lazy and inefficient I know
+            this.setState({
+              hideForm: true,
+              waitTime: values.wait_time,
+              triageComments: values.triage_comments
+            });
           })
           .catch((error) => {
             if (error.response) {
@@ -59,40 +95,50 @@ class HorizontalLoginForm extends React.Component {
   };
 
   render() {
-    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
 
     // Only show error after a field is touched.
-    const visit_time_error = isFieldTouched('wait_time') && getFieldError('wait_time');
-    const triage_comment_error = isFieldTouched('triage_comments') && getFieldError('triage_comments');
-    return (
-      <Form layout="inline" onSubmit={this.assignWaitTime}>
-        <Form.Item validateStatus={visit_time_error ? 'error' : ''} help={visit_time_error || ''}>
-          {getFieldDecorator('wait_time', {
-            rules: [{ required: true, message: 'Please input the wait time!' }],
-          })(
-            <Input
-              prefix={<Icon type="clock-circle" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Wait Time"
-            />,
-          )}
-        </Form.Item>
-        <Form.Item validateStatus={triage_comment_error ? 'error' : ''} help={triage_comment_error || ''}>
-          {getFieldDecorator('triage_comments', {
-            rules: [{ required: true, message: 'Please input a comment!' }],
-          })(
-            <Input
-              prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Comments"
-            />,
-          )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-            Submit
+    // const visit_time_error = isFieldTouched('wait_time') && getFieldError('wait_time');
+    // const triage_comment_error = isFieldTouched('triage_comments') && getFieldError('triage_comments');
+    // console.log("my wait tims is", this.props.waitTime);
+    if (this.props.waitTime || this.state.hideForm) {
+    return (<h2 className="red">A wait time of {this.state.waitTime} minutes has been assigned with comment "{this.state.triageComments}".</h2>);
+    }
+    else {
+      return (
+        <><h2 className="red">Assign a Wait Time</h2>
+          <Form layout="inline" onSubmit={this.assignWaitTime}>
+            <Form.Item label="Assign wait time" key={this.props.visitId}>
+              {getFieldDecorator('wait_time', {
+                rules: [{ required: true, message: 'Please input the wait time!' }]
+              })(
+                <Input
+                  prefix={<Icon type="clock-circle" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  size="large"
+                  placeholder="Wait time (minutes)"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item label="Comments to send">
+              {getFieldDecorator('triage_comments', {
+                rules: [{ required: true, message: 'Please input a comment!' }],
+              })(
+                <Input
+                  prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  size="large"
+                  placeholder="Comments"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Submit
           </Button>
-        </Form.Item>
-      </Form>
-    );
+            </Form.Item>
+          </Form>
+        </>
+      );
+    }
   }
 }
 

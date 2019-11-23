@@ -37,6 +37,10 @@ main h2 {
   margin-top: 2em;
 }
 
+.red {
+  color: red;
+}
+
 main .margin-bottom {
   margin-bottom: 1em;
 }

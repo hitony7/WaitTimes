@@ -5,10 +5,6 @@ import axios from 'axios';
 import WrappedHorizontalLoginForm from './TimeForm.jsx';
 import NOT_LOGGED_IN from './App.js';
 
-const token = localStorage.getItem("token");
-const config = {
-  headers: { 'Authorization': "Bearer " + token }
-};
 class Admin extends Component {
 
   constructor(props) {
@@ -30,32 +26,40 @@ class Admin extends Component {
   }
 
   getVisits = () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { 'Authorization': "Bearer " + token }
+    };
     axios
-    .get('/api/events', config) // let's grab the triage questions from the database
-    .then(response => {
-      // handle success
-      for (const item of response.data) { // let's do some date updating and name combining
-        item.event_date = this.props.formatDateFromUTCString(item.event_date);
-        item.updated_date = this.props.formatDateFromUTCString(item.updated_date);
-        item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
-      }
-      this.setState({
-        areEventsLoaded: true,
-        visits: response.data,
-      });
-    },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
+      .get('/api/events', config) // let's grab the triage questions from the database
+      .then(response => {
+        // handle success
+        for (const item of response.data) { // let's do some date updating and name combining
+          item.event_date = this.props.formatDateFromUTCString(item.event_date);
+          item.updated_date = this.props.formatDateFromUTCString(item.updated_date);
+          item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
+        }
         this.setState({
           areEventsLoaded: true,
-          error
+          visits: response.data,
         });
-      });
+      },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            areEventsLoaded: true,
+            error
+          });
+        });
   }
 
   componentDidMount() {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { 'Authorization': "Bearer " + token }
+    };
     this.getVisits();
     axios
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
@@ -220,14 +224,16 @@ class Admin extends Component {
           <p>{this.state.message}</p>
           <h2>Pending ER Visits</h2>
           <Modal
-            title="Details"
+            title={<WrappedHorizontalLoginForm
+              visitId={this.state.currentVisitId}
+              getVisits={this.getVisits}
+              waitTime={this.state.current_patient.given_wait_time_minutes}
+              triageComments={this.state.current_patient.triage_comment} />}
             visible={this.state.visible}
             onOk={this.handleOk}
             width={900}
             onCancel={this.handleCancel}
           >
-            <h2>Assign a Wait Time</h2>
-            <WrappedHorizontalLoginForm visitId={this.state.currentVisitId} getVisits={this.getVisits} />
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
             <p>{this.state.current_patient.visit_description}</p>
             <Descriptions title="Patient Info">
