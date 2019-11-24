@@ -21,12 +21,15 @@ class Caregiver extends Component {
       currentVisit: {},
       showNotice: false,
       nurse: "JOE",
+      chatMessage: '',
 
     }
   }
   handleNewUserMessage = (newMessage) => {
     console.log(`New message incoming! ${newMessage}`);
     // Now send the message throught the backend API
+    console.log(this.state.chatMessage);
+    
   }
 
 
@@ -86,8 +89,14 @@ class Caregiver extends Component {
           });
         });
 
+    window.fetch('http://localhost:3001/chats/1').then(data => {
+      data.json().then(res => {
+        this.setState({ chatMessage: res.text })
+      })
+    })
 
-        addResponseMessage("You are talking to Nurse " + this.state.nurse);
+
+    addResponseMessage("You are talking to Nurse " + this.state.nurse);
   }
 
   // componentDidUpdate() {
