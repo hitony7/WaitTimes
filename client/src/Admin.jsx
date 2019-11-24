@@ -31,6 +31,7 @@ class Admin extends Component {
     console.log(event);
     if (event.text === 'updated!') {
       this.getVisits();
+      this.getAnswers();
     }
     // if (text !== this.state.text) {
     //   this.setState({ text })
@@ -72,6 +73,31 @@ class Admin extends Component {
         });
   }
 
+  getAnswers = () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { 'Authorization': "Bearer " + token }
+    };
+    axios
+    .get('/api/triage_question_answers', config) // let's grab the triage questions from the database
+    .then(response => {
+      // handle success
+      this.setState({
+        areAnswersLoaded: true,
+        answers: response.data,
+      });
+    },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+        this.setState({
+          areAnswersLoaded: true,
+          error
+        });
+      });
+  }
+
   componentDidMount() {
     const token = localStorage.getItem("token");
     const cable = ActionCable.createConsumer(process.env.REACT_APP_SECRET_WS_URL, token);
@@ -82,6 +108,7 @@ class Admin extends Component {
       headers: { 'Authorization': "Bearer " + token }
     };
     this.getVisits();
+    this.getAnswers();
     axios
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
@@ -102,24 +129,7 @@ class Admin extends Component {
             error
           });
         });
-    axios
-      .get('/api/triage_question_answers', config) // let's grab the triage questions from the database
-      .then(response => {
-        // handle success
-        this.setState({
-          areAnswersLoaded: true,
-          answers: response.data,
-        });
-      },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            areAnswersLoaded: true,
-            error
-          });
-        });
+
   }
 
   convertArrayToObject = (array, key) => { // from https://dev.to/afewminutesofcode/how-to-convert-an-array-into-an-object-in-javascript-25a4
