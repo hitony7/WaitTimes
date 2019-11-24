@@ -173,7 +173,7 @@ class Event extends Component {
           <h2>{this.state.message}</h2>
 
           <Form onSubmit={this.startEmergencyEvent} className="registration-form" layout="horizontal">
-            <Form.Item label="What is your main concern? Why do you want to bring your child in to be seen by an emergency physician?">
+            <Form.Item label="What is the priority concern for the child? Please try to be as specific as possible. What happened and where?">
               {getFieldDecorator('visit_description', {
                 rules: [{ required: false, message: 'Please input your answer!' }],
               })(
