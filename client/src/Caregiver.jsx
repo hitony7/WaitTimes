@@ -89,7 +89,6 @@ class Caregiver extends Component {
     this.setState({ redirect: true });
   }
 
-
   render() {
     const { error, isLoaded, visits } = this.state;
     const columns = [
@@ -117,6 +116,8 @@ class Caregiver extends Component {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
       },
+
+
     ];
     if (this.state.redirect) {
       return (<Redirect to='/patient' />)
@@ -136,7 +137,9 @@ class Caregiver extends Component {
           <h2 style={{ color: 'red' }}>New ER Visit</h2>
           <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
           <h2>Pending ER Visits</h2>
+          
           <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
+
         </main>
       );
     }
