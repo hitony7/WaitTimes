@@ -66,7 +66,7 @@ class Caregiver extends Component {
       this.setState({
         isLoaded: true,
         visits: response.data,
-        caregiver_id: response.data[0].caregiver_id
+        caregiver_id: response.data[0].caregiver_id ? response.data[0].caregiver_id : null
       });
     },
       // Note: it's important to handle errors here
