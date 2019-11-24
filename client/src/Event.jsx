@@ -186,7 +186,7 @@ class Event extends Component {
                 />
               )}
             </Form.Item>
-// TODO
+
             {triageQuestions.map((question, idx) => (
               <Form.Item label={question.question_text} key={idx}>
                 <TextArea
