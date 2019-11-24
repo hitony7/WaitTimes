@@ -33,24 +33,6 @@ class App extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', jwt_token);
-  //   this.sub = cable.subscriptions.create('NotesChannel', {
-  //     received: this.handleReceiveNewText
-  //   })
-  // }
-
-  // handleReceiveNewText = ({ text }) => {
-  //   if (text !== this.state.text) {
-  //     this.setState({ text })
-  //   }
-  // }
-
-  // handleChange = e => {
-  //   this.setState({ text: e.target.value })
-  //   this.sub.send({ text: e.target.value, id: 1 })
-  // }
-
   setUser = email => {
     this.setState({ email: email });
     this.setState({ loggedInStatus: LOGGED_IN });
