@@ -161,7 +161,7 @@ class Patient extends Component {
                 name="gender"
                 id="gender"
                 type="text"
-                placeholder="Gender"
+                placeholder="Sex"
               />
             )}
           </Form.Item>
