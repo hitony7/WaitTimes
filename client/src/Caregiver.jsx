@@ -22,10 +22,14 @@ class Caregiver extends Component {
     }
   }
 
+  displayNotification = (args) => {
+    notification.open(args);
+  }
+
 
   handleReceiveNewText = (e) => {
     console.log(e);
-    console.log('test', e.caregiverID === this.state.caregiver_id);
+    // console.log('test', e.caregiverID === this.state.caregiver_id);
     if(e.visitId && e.waitTime && e.caregiverID === this.state.caregiver_id) {
       let now = new Date();
       now.setMinutes( now.getMinutes() + Number(e.waitTime));
@@ -36,7 +40,9 @@ class Caregiver extends Component {
         duration: 0,
         className: 'red-notice'
       };
-      notification.open(args);
+      if (e.visitId !== undefined) {
+        this.displayNotification(args);
+      }
       this.getMyVisits(); // repeat API call to get all my visits (lazy I know)
     }
 
