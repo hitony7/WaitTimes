@@ -14,13 +14,14 @@ Rails.application.routes.draw do
     post '/ervisit/:id', to: 'emergency_room_visit#update_event'
     post '/triage_question_answers', to: 'triage_question_answers#create'
     get '/triage_question_answers', to: 'triage_question_answers#index'
-    mount ActionCable.server, at: '/cable'
-
+    
     resources :users
-
+    
     resources :triage_questions
   end
-
+  
+  mount ActionCable.server, at: '/cable'
+  
   get '*path', to: 'static_pages#fallback_index_html', constraints: lambda { |request|
     !request.xhr? && request.format.html?
   }
