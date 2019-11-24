@@ -5,6 +5,7 @@ import { Form, Input, Button, Alert, List } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
+import ActionCable from "action-cable-react-jwt";
 const querystring = require('querystring');
 const { TextArea } = Input;
 
@@ -35,6 +36,8 @@ class Event extends Component {
     const config = {
       headers: { 'Authorization': "Bearer " + token }
     };
+    const cable = ActionCable.createConsumer(process.env.REACT_APP_SECRET_WS_URL, token);
+    this.sub = cable.subscriptions.create('NotesChannel');
     axios
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
@@ -105,6 +108,7 @@ class Event extends Component {
                 setTimeout(function () { //Start the timer
                   this.setState({ redirect: true }) //After 1 second, set redirect to true
                 }.bind(this), 1000);
+                this.sub.send({ text: 'updated!' })
               })
               .catch((error) => {
                 if (error.response) {

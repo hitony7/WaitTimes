@@ -27,11 +27,15 @@ class Admin extends Component {
     }
   }
 
-  // handleReceiveNewText = ({ text }) => {
-  //   if (text !== this.state.text) {
-  //     this.setState({ text })
-  //   }
-  // }
+  handleReceiveNewText = (event) => {
+    console.log(event);
+    if (event.text === 'updated!') {
+      this.getVisits();
+    }
+    // if (text !== this.state.text) {
+    //   this.setState({ text })
+    // }
+  }
 
   // handleChange = e => {
   //   this.setState({ text: e.target.value })
