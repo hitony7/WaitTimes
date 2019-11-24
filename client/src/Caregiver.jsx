@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, notification } from 'antd';
+import { Button, Table, notification, Tag } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
@@ -34,6 +34,7 @@ class Caregiver extends Component {
       className: 'red-notice'
     };
     notification.open(args);
+    this.getMyVisits(); // repeat API call to get all my visits (lazy I know)
 
     // if (text !== this.state.text) {
     //   console.log({ visitId });
@@ -46,36 +47,42 @@ class Caregiver extends Component {
     this.sub.send({ text: e.target.value, id: 1 })
   }
 
+  getMyVisits = () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { 'Authorization': "Bearer " + token }
+    };
+    axios
+    .get('/api/event', config) // let's grab the triage questions from the database
+    .then(response => {
+      // handle success
+      for (const item of response.data) { // let's do some date updating
+        item.event_date = this.props.formatDateFromUTCString(item.event_date);
+      }
+      this.setState({
+        isLoaded: true,
+        visits: response.data,
+      });
+    },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      });
+  }
+
   componentDidMount() {
+    this.getMyVisits();
     const token = localStorage.getItem("token");
     const cable = ActionCable.createConsumer(process.env.REACT_APP_SECRET_WS_URL, token);
     this.sub = cable.subscriptions.create('NotesChannel', {
       received: this.handleReceiveNewText
     })
-    const config = {
-      headers: { 'Authorization': "Bearer " + token }
-    };
-    axios
-      .get('/api/event', config) // let's grab the triage questions from the database
-      .then(response => {
-        // handle success
-        for (const item of response.data) { // let's do some date updating
-          item.event_date = this.props.formatDateFromUTCString(item.event_date);
-        }
-        this.setState({
-          isLoaded: true,
-          visits: response.data,
-        });
-      },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        });
+
   }
 
   // componentDidUpdate() {
@@ -116,6 +123,11 @@ class Caregiver extends Component {
       {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
+        render: (given_wait_time_minutes) => (
+          <div>
+            {given_wait_time_minutes ? given_wait_time_minutes : <Tag color="red">UNASSIGNED</Tag>}
+          </div>
+        )
       },
     ];
     if (this.state.redirect) {
