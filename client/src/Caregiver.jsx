@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Table } from 'antd';
+import { Button, Table, notification } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
+import ActionCable from "action-cable-react-jwt";
 
 class Caregiver extends Component {
 
@@ -13,12 +14,44 @@ class Caregiver extends Component {
       message: 'Welcome to the caregiver dashboard. Here you can see your existing ER requests and associated wait times as well as create new ER visits.',
       error: null,
       isLoaded: false,
-      visits: []
+      visits: [],
+      text: '',
+      currentVisit: {},
+      showNotice: false
     }
+  }
+
+
+  handleReceiveNewText = (e) => {
+    console.log(e)
+    let now = new Date();
+    now.setMinutes( now.getMinutes() + Number(e.waitTime));
+    const args = {
+      message: `Case ${e.visitId} has been reviewed`,
+      description:
+        `Your case has been assigned a wait time of ${e.waitTime} minutes with comment "${e.comment}". Please arrive at ${this.props.formatDateFromUTCString(now)}.`,
+      duration: 0,
+      className: 'red-notice'
+    };
+    notification.open(args);
+
+    // if (text !== this.state.text) {
+    //   console.log({ visitId });
+    //   this.setState({ text })
+    // }
+  }
+
+  handleChange = e => {
+    this.setState({ text: e.target.value })
+    this.sub.send({ text: e.target.value, id: 1 })
   }
 
   componentDidMount() {
     const token = localStorage.getItem("token");
+    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', token);
+    this.sub = cable.subscriptions.create('NotesChannel', {
+      received: this.handleReceiveNewText
+    })
     const config = {
       headers: { 'Authorization': "Bearer " + token }
     };
@@ -100,17 +133,10 @@ class Caregiver extends Component {
         <main>
           <h1>Caregiver Dashboard</h1>
           <p>{this.state.message}</p>
-          <h2 style={{color: 'red'}}>New ER Visit</h2>
+          <h2 style={{ color: 'red' }}>New ER Visit</h2>
           <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
           <h2>Pending ER Visits</h2>
           <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
-          {/* <ul>
-            {visits.map(visit => (
-              <li key={visit.id}>
-                {visit.id} {visit.visit_description} {visit.given_wait_time_minutes} {visit.created_at}
-              </li>
-            ))}
-          </ul> */}
         </main>
       );
     }

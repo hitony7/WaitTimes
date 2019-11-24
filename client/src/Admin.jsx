@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import WrappedHorizontalLoginForm from './TimeForm.jsx';
 import NOT_LOGGED_IN from './App.js';
+import ActionCable from "action-cable-react-jwt";
 
 class Admin extends Component {
 
@@ -21,9 +22,21 @@ class Admin extends Component {
       answers: [],
       visible: false,
       current_patient: {},
-      currentVisitId: null
+      currentVisitId: null,
+      text: ''
     }
   }
+
+  // handleReceiveNewText = ({ text }) => {
+  //   if (text !== this.state.text) {
+  //     this.setState({ text })
+  //   }
+  // }
+
+  // handleChange = e => {
+  //   this.setState({ text: e.target.value })
+  //   this.sub.send({ text: e.target.value, id: 2 })
+  // }
 
   getVisits = () => {
     const token = localStorage.getItem("token");
@@ -57,6 +70,10 @@ class Admin extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem("token");
+    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', token);
+    this.sub = cable.subscriptions.create('NotesChannel', {
+      received: this.handleReceiveNewText
+    })
     const config = {
       headers: { 'Authorization': "Bearer " + token }
     };
@@ -150,6 +167,14 @@ class Admin extends Component {
     return currentPatientsAnswers;
   };
 
+  socketMessage = (visitId, waitTime, comment) => {
+    this.sub.send({
+      visitId: visitId,
+      waitTime: waitTime,
+      comment: comment
+    })
+  }
+
   render() {
     const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits } = this.state;
     const answers = this.getTriageQuestionAnswersForPatient(this.state);
@@ -228,7 +253,9 @@ class Admin extends Component {
               visitId={this.state.currentVisitId}
               getVisits={this.getVisits}
               waitTime={this.state.current_patient.given_wait_time_minutes}
-              triageComments={this.state.current_patient.triage_comment} />}
+              triageComments={this.state.current_patient.triage_comment}
+              socketMessage={this.socketMessage}
+            />}
             visible={this.state.visible}
             onOk={this.handleOk}
             width={900}
