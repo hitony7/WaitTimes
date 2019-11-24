@@ -15,6 +15,13 @@ ActiveRecord::Schema.define(version: 2019_11_23_000407) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "conversation", primary_key: "emergency_rooms_visit_id", id: :bigint, default: nil, force: :cascade do |t|
+    t.text "sender_id"
+    t.text "reciever_id"
+    t.datetime "time_sent"
+    t.text "message"
+  end
+
   create_table "emergency_room_visits", force: :cascade do |t|
     t.string "visit_description"
     t.integer "given_wait_time_minutes"

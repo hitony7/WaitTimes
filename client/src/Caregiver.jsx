@@ -4,6 +4,8 @@ import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
 import ActionCable from "action-cable-react-jwt";
+import { Widget, addResponseMessage } from 'react-chat-widget';
+import 'react-chat-widget/lib/styles.css';
 
 class Caregiver extends Component {
 
@@ -17,11 +19,18 @@ class Caregiver extends Component {
       visits: [],
       text: '',
       currentVisit: {},
-      showNotice: false
+      showNotice: false,
+      nurse: "JOE",
+
     }
+  }
+  handleNewUserMessage = (newMessage) => {
+    console.log(`New message incoming! ${newMessage}`);
+    // Now send the message throught the backend API
   }
 
 
+ 
   handleReceiveNewText = (e) => {
     console.log(e)
     let now = new Date();
@@ -76,6 +85,9 @@ class Caregiver extends Component {
             error
           });
         });
+
+
+        addResponseMessage("You are talking to Nurse " + this.state.nurse);
   }
 
   // componentDidUpdate() {
@@ -130,17 +142,25 @@ class Caregiver extends Component {
       return <div>Loading...</div>;
     } else {
       return (
-        <main>
-          <h1>Caregiver Dashboard</h1>
-          <p>{this.state.message}</p>
-          <h2 style={{ color: 'red' }}>New ER Visit</h2>
-          <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
-          <h2>Pending ER Visits</h2>
-          <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
-        </main>
+        <div className="Container">
+          <main>
+            <h1>Caregiver Dashboard</h1>
+            <p>{this.state.message}</p>
+            <h2 style={{ color: 'red' }}>New ER Visit</h2>
+            <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
+            <h2>Pending ER Visits</h2>
+            <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
+          </main>
+          <form>
+            <Widget
+              handleNewUserMessage={this.handleNewUserMessage}
+            />
+          </form>
+        </div>
       );
     }
   }
+
 }
 
 export default Caregiver;
