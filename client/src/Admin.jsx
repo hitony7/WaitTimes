@@ -27,16 +27,16 @@ class Admin extends Component {
     }
   }
 
-  handleReceiveNewText = ({ text }) => {
-    if (text !== this.state.text) {
-      this.setState({ text })
-    }
-  }
+  // handleReceiveNewText = ({ text }) => {
+  //   if (text !== this.state.text) {
+  //     this.setState({ text })
+  //   }
+  // }
 
-  handleChange = e => {
-    this.setState({ text: e.target.value })
-    this.sub.send({ text: e.target.value, id: 1 })
-  }
+  // handleChange = e => {
+  //   this.setState({ text: e.target.value })
+  //   this.sub.send({ text: e.target.value, id: 2 })
+  // }
 
   getVisits = () => {
     const token = localStorage.getItem("token");
@@ -167,6 +167,14 @@ class Admin extends Component {
     return currentPatientsAnswers;
   };
 
+  socketMessage = (visitId, waitTime, comment) => {
+    this.sub.send({
+      visitId: visitId,
+      waitTime: waitTime,
+      comment: comment
+    })
+  }
+
   render() {
     const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits } = this.state;
     const answers = this.getTriageQuestionAnswersForPatient(this.state);
@@ -238,10 +246,6 @@ class Admin extends Component {
       return (
         <main>
           <h1>Triage Admin Panel</h1>
-          <textarea
-            value={this.state.text}
-            onChange={this.handleChange}
-          />
           <p>{this.state.message}</p>
           <h2>Pending ER Visits</h2>
           <Modal
@@ -249,7 +253,9 @@ class Admin extends Component {
               visitId={this.state.currentVisitId}
               getVisits={this.getVisits}
               waitTime={this.state.current_patient.given_wait_time_minutes}
-              triageComments={this.state.current_patient.triage_comment} />}
+              triageComments={this.state.current_patient.triage_comment}
+              socketMessage={this.socketMessage}
+            />}
             visible={this.state.visible}
             onOk={this.handleOk}
             width={900}

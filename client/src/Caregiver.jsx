@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table } from 'antd';
+import { Button, Table, notification } from 'antd';
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import NOT_LOGGED_IN from './App.js';
@@ -15,15 +15,30 @@ class Caregiver extends Component {
       error: null,
       isLoaded: false,
       visits: [],
-      text: ''
+      text: '',
+      currentVisit: {},
+      showNotice: false
     }
   }
 
 
-  handleReceiveNewText = ({ text }) => {
-    if (text !== this.state.text) {
-      this.setState({ text })
-    }
+  handleReceiveNewText = (e) => {
+    console.log(e)
+    let now = new Date();
+    now.setMinutes( now.getMinutes() + Number(e.waitTime));
+    const args = {
+      message: `Case ${e.visitId} has been reviewed`,
+      description:
+        `Your case has been assigned a wait time of ${e.waitTime} minutes with comment "${e.comment}". Please arrive at ${this.props.formatDateFromUTCString(now)}.`,
+      duration: 0,
+      className: 'red-notice'
+    };
+    notification.open(args);
+
+    // if (text !== this.state.text) {
+    //   console.log({ visitId });
+    //   this.setState({ text })
+    // }
   }
 
   handleChange = e => {
@@ -117,22 +132,11 @@ class Caregiver extends Component {
       return (
         <main>
           <h1>Caregiver Dashboard</h1>
-          <textarea
-            value={this.state.text}
-            onChange={this.handleChange}
-          />
           <p>{this.state.message}</p>
           <h2 style={{ color: 'red' }}>New ER Visit</h2>
           <Button onClick={this.newVisit} type="danger">New Emergency Room Visit</Button>
           <h2>Pending ER Visits</h2>
           <Table columns={columns} dataSource={visits} rowKey={visits => visits.id} scroll={{ x: 800 }} />
-          {/* <ul>
-            {visits.map(visit => (
-              <li key={visit.id}>
-                {visit.id} {visit.visit_description} {visit.given_wait_time_minutes} {visit.created_at}
-              </li>
-            ))}
-          </ul> */}
         </main>
       );
     }

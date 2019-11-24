@@ -33,6 +33,16 @@ nav.navbar {
   display: flex;
 }
 
+.red-notice {
+  background: #ff4d4f !important;
+  color: white !important;
+}
+
+.red-notice .ant-notification-notice-message {
+  color: white;
+  font-weight: bold;
+}
+
 main h2 {
   margin-top: 2em;
 }
