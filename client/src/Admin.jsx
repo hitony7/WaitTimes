@@ -262,6 +262,7 @@ class Admin extends Component {
             onCancel={this.handleCancel}
           >
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
+            <h3>Primary Visit Concern</h3>
             <p>{this.state.current_patient.visit_description}</p>
             <Descriptions title="Patient Info">
               <Descriptions.Item label="Name">{this.state.current_patient.patient_name}</Descriptions.Item>
