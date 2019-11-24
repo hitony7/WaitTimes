@@ -48,7 +48,7 @@ class Caregiver extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem("token");
-    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', token);
+    const cable = ActionCable.createConsumer(process.env.REACT_APP_SECRET_WS_URL, token);
     this.sub = cable.subscriptions.create('NotesChannel', {
       received: this.handleReceiveNewText
     })
