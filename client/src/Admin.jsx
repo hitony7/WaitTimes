@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Table, Modal, Descriptions, Tag } from 'antd';
 import { Redirect } from "react-router-dom";
-// import $ from 'jquery';
 import axios from 'axios';
+import WrappedHorizontalLoginForm from './TimeForm.jsx';
 import NOT_LOGGED_IN from './App.js';
+import ActionCable from "action-cable-react-jwt";
 
 class Admin extends Component {
 
@@ -21,11 +22,23 @@ class Admin extends Component {
       answers: [],
       visible: false,
       current_patient: {},
-      currentVisitId: null
+      currentVisitId: null,
+      text: ''
     }
   }
 
-  componentDidMount() {
+  // handleReceiveNewText = ({ text }) => {
+  //   if (text !== this.state.text) {
+  //     this.setState({ text })
+  //   }
+  // }
+
+  // handleChange = e => {
+  //   this.setState({ text: e.target.value })
+  //   this.sub.send({ text: e.target.value, id: 2 })
+  // }
+
+  getVisits = () => {
     const token = localStorage.getItem("token");
     const config = {
       headers: { 'Authorization': "Bearer " + token }
@@ -36,6 +49,7 @@ class Admin extends Component {
         // handle success
         for (const item of response.data) { // let's do some date updating and name combining
           item.event_date = this.props.formatDateFromUTCString(item.event_date);
+          item.updated_date = this.props.formatDateFromUTCString(item.updated_date);
           item.caregiver_name = item.caregiver_first_name + ' ' + item.caregiver_last_name;
         }
         this.setState({
@@ -52,6 +66,18 @@ class Admin extends Component {
             error
           });
         });
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+    const cable = ActionCable.createConsumer('ws://localhost:3001/api/cable', token);
+    this.sub = cable.subscriptions.create('NotesChannel', {
+      received: this.handleReceiveNewText
+    })
+    const config = {
+      headers: { 'Authorization': "Bearer " + token }
+    };
+    this.getVisits();
     axios
       .get('/api/triage_questions', config) // let's grab the triage questions from the database
       .then(response => {
@@ -92,7 +118,7 @@ class Admin extends Component {
         });
   }
 
-  convertArrayToObject = (array, key) => {
+  convertArrayToObject = (array, key) => { // from https://dev.to/afewminutesofcode/how-to-convert-an-array-into-an-object-in-javascript-25a4
     const initialValue = {};
     return array.reduce((obj, item) => {
       return {
@@ -111,7 +137,6 @@ class Admin extends Component {
   };
 
   handleOk = e => {
-    console.log(e);
     this.setState({
       visible: false,
       current_patient: {},
@@ -120,7 +145,6 @@ class Admin extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
       current_patient: {},
@@ -143,10 +167,17 @@ class Admin extends Component {
     return currentPatientsAnswers;
   };
 
+  socketMessage = (visitId, waitTime, comment) => {
+    this.sub.send({
+      visitId: visitId,
+      waitTime: waitTime,
+      comment: comment
+    })
+  }
+
   render() {
     const { error, areEventsLoaded, areQuestionsLoaded, areAnswersLoaded, visits } = this.state;
     const answers = this.getTriageQuestionAnswersForPatient(this.state);
-    console.log(answers);
     const columns = [
       {
         title: 'Patient Name',
@@ -166,9 +197,17 @@ class Admin extends Component {
         dataIndex: 'event_date',
       },
       {
+        title: 'Wait Time Assigned',
+        dataIndex: 'updated_date',
+      },
+      {
         title: 'Given Wait Time (minutes)',
         dataIndex: 'given_wait_time_minutes',
-        render: () => <Tag color="red">UNASSIGNED</Tag>
+        render: (given_wait_time_minutes) => (
+          <div>
+            {given_wait_time_minutes ? given_wait_time_minutes : <Tag color="red">UNASSIGNED</Tag>}
+          </div>
+        )
       },
       {
         title: 'Action',
@@ -210,18 +249,25 @@ class Admin extends Component {
           <p>{this.state.message}</p>
           <h2>Pending ER Visits</h2>
           <Modal
-            title="Details"
+            title={<WrappedHorizontalLoginForm
+              visitId={this.state.currentVisitId}
+              getVisits={this.getVisits}
+              waitTime={this.state.current_patient.given_wait_time_minutes}
+              triageComments={this.state.current_patient.triage_comment}
+              socketMessage={this.socketMessage}
+            />}
             visible={this.state.visible}
             onOk={this.handleOk}
             width={900}
             onCancel={this.handleCancel}
           >
             <h2>New ER visit for {this.state.current_patient.patient_name} on {this.state.current_patient.event_date}</h2>
+            <h3>Primary Visit Concern</h3>
             <p>{this.state.current_patient.visit_description}</p>
             <Descriptions title="Patient Info">
               <Descriptions.Item label="Name">{this.state.current_patient.patient_name}</Descriptions.Item>
               <Descriptions.Item label="Age">{this.state.current_patient.patient_age}</Descriptions.Item>
-              <Descriptions.Item label="AHC Number">{this.state.current_patient.patient_ahc_number}</Descriptions.Item>
+              <Descriptions.Item label="Healthcare Number">{this.state.current_patient.patient_ahc_number}</Descriptions.Item>
               <Descriptions.Item label="Address">{this.state.current_patient.patient_address}</Descriptions.Item>
               <Descriptions.Item label="Gender">{this.state.current_patient.gender}</Descriptions.Item>
               <Descriptions.Item label="Allergies">{this.state.current_patient.allergies}</Descriptions.Item>

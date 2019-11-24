@@ -11,12 +11,13 @@ Rails.application.routes.draw do
     post '/event', to: 'emergency_room_visit#create'
     get '/event', to: 'emergency_room_visit#myevents'
     get '/events', to: 'emergency_room_visit#allevents'
+    post '/ervisit/:id', to: 'emergency_room_visit#update_event'
     post '/triage_question_answers', to: 'triage_question_answers#create'
     get '/triage_question_answers', to: 'triage_question_answers#index'
-    post '/patient', to: 'patient#update'
+    mount ActionCable.server, at: '/cable'
 
-    resources : patient
     resources :users
+
     resources :triage_questions
   end
 
