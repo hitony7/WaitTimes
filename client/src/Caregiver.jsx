@@ -17,24 +17,28 @@ class Caregiver extends Component {
       visits: [],
       text: '',
       currentVisit: {},
-      showNotice: false
+      showNotice: false,
+      caregiver_id: null
     }
   }
 
 
   handleReceiveNewText = (e) => {
-    console.log(e)
-    let now = new Date();
-    now.setMinutes( now.getMinutes() + Number(e.waitTime));
-    const args = {
-      message: `Case ${e.visitId} has been reviewed`,
-      description:
-        `Your case has been assigned a wait time of ${e.waitTime} minutes with comment "${e.comment}". Please arrive at ${this.props.formatDateFromUTCString(now)}.`,
-      duration: 0,
-      className: 'red-notice'
-    };
-    notification.open(args);
-    this.getMyVisits(); // repeat API call to get all my visits (lazy I know)
+    console.log(e);
+    console.log('test', e.caregiverID === this.state.caregiver_id);
+    if(e.visitId && e.waitTime && e.caregiverID === this.state.caregiver_id) {
+      let now = new Date();
+      now.setMinutes( now.getMinutes() + Number(e.waitTime));
+      const args = {
+        message: `Case ${e.visitId} has been reviewed`,
+        description:
+          `Your case has been assigned a wait time of ${e.waitTime} minutes with comment "${e.comment}". Please arrive at ${this.props.formatDateFromUTCString(now)}.`,
+        duration: 0,
+        className: 'red-notice'
+      };
+      notification.open(args);
+      this.getMyVisits(); // repeat API call to get all my visits (lazy I know)
+    }
 
     // if (text !== this.state.text) {
     //   console.log({ visitId });
@@ -62,6 +66,7 @@ class Caregiver extends Component {
       this.setState({
         isLoaded: true,
         visits: response.data,
+        caregiver_id: response.data[0].caregiver_id
       });
     },
       // Note: it's important to handle errors here

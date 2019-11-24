@@ -65,7 +65,7 @@ class HorizontalLoginForm extends React.Component {
             // console.log(response);
             // console.log('stuff')
             this.props.getVisits(); // force parent Admin.jsx to re-fetch ALL visits…lazy and inefficient I know
-            this.props.socketMessage(this.props.visitId, values.wait_time, values.triage_comments); // call the socket message in the parent component
+            this.props.socketMessage(this.props.visitId, values.wait_time, values.triage_comments, this.props.caregiver_id); // call the socket message in the parent component
             this.setState({
               hideForm: true,
               waitTime: values.wait_time,

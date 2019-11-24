@@ -24,7 +24,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
   def myevents
     @ervisit = EmergencyRoomVisit
                .where('emergency_room_visits.users_id = ? AND emergency_room_visits.is_active = ?', @current_user.id, true).joins(:patient)
-               .select('emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.created_at AS event_date, emergency_room_visits.patients_id, patients.*').order('created_at DESC')
+               .select('emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.users_id AS caregiver_id, emergency_room_visits.created_at AS event_date, emergency_room_visits.patients_id, patients.*').order('created_at DESC')
 
     render json: @ervisit
   end
@@ -34,7 +34,7 @@ class Api::EmergencyRoomVisitController < ApplicationController
     if @current_user.role == 'triage_staff'
       @ervisit = EmergencyRoomVisit
                  .where('emergency_room_visits.is_active = ?', true).joins(:patient).joins(:user)
-                 .select('emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.updated_at AS updated_date, emergency_room_visits.created_at AS event_date, emergency_room_visits.triage_comment, emergency_room_visits.patients_id, patients.address AS patient_address, patients.name AS patient_name, patients.allergies, patients.gender, patients.caregiver_relationship, patients.ahc_number AS patient_ahc_number, patients.name AS patient_name, patients.age AS patient_age, users.first_name AS caregiver_first_name, users.last_name AS caregiver_last_name, users.phone').order('emergency_room_visits.created_at DESC')
+                 .select('emergency_room_visits.id, emergency_room_visits.visit_description, emergency_room_visits.given_wait_time_minutes, emergency_room_visits.updated_at AS updated_date, emergency_room_visits.created_at AS event_date, emergency_room_visits.triage_comment, emergency_room_visits.patients_id, emergency_room_visits.users_id AS caregiver_id, patients.address AS patient_address, patients.name AS patient_name, patients.allergies, patients.gender, patients.caregiver_relationship, patients.ahc_number AS patient_ahc_number, patients.name AS patient_name, patients.age AS patient_age, users.first_name AS caregiver_first_name, users.last_name AS caregiver_last_name, users.phone').order('emergency_room_visits.created_at DESC')
     else
       @ervisit = 'You do not have permission to perform this query.'
     end

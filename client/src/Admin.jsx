@@ -167,11 +167,12 @@ class Admin extends Component {
     return currentPatientsAnswers;
   };
 
-  socketMessage = (visitId, waitTime, comment) => {
+  socketMessage = (visitId, waitTime, comment, caregiverID) => {
     this.sub.send({
       visitId: visitId,
       waitTime: waitTime,
-      comment: comment
+      comment: comment,
+      caregiverID: caregiverID
     })
   }
 
@@ -253,6 +254,7 @@ class Admin extends Component {
               visitId={this.state.currentVisitId}
               getVisits={this.getVisits}
               waitTime={this.state.current_patient.given_wait_time_minutes}
+              caregiver_id={this.state.current_patient.caregiver_id}
               triageComments={this.state.current_patient.triage_comment}
               socketMessage={this.socketMessage}
             />}
