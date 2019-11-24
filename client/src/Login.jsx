@@ -31,7 +31,7 @@ class Login extends Component {
           .then((response) => {
             // console.log('Server response', response);
             localStorage.setItem("token", response.data.token);
-            this.props.setUser(values.email); // set the user's email in the React state
+            this.props.setUser(values.email, response.data.caregiver_id); // set the user's email in the React state
             this.props.setRole(response.data.role); // set the user's email in the React state
             this.setState({ redirect: true }); // trigger a redirect once logged in and state updated
           })

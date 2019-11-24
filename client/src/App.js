@@ -33,9 +33,12 @@ class App extends Component {
     };
   }
 
-  setUser = email => {
-    this.setState({ email: email });
-    this.setState({ loggedInStatus: LOGGED_IN });
+  setUser = (email, caregiver_id) => {
+    this.setState({
+      email: email,
+      loggedInStatus: LOGGED_IN,
+      caregiver_id: caregiver_id
+     });
   };
 
   setPatient = (patientObject) => {
@@ -58,7 +61,7 @@ class App extends Component {
     // Remove the token from localStorage
     localStorage.removeItem("token");
     // Update the state
-    this.setState({ loggedInStatus: NOT_LOGGED_IN, email: '' });
+    this.setState({ loggedInStatus: NOT_LOGGED_IN, email: '', caregiver_id: null });
   };
 
   setRole = role => {
@@ -83,7 +86,7 @@ class App extends Component {
             />
             <Route
               path="/caregiver"
-              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} formatDateFromUTCString={this.formatDateFromUTCString} /> : <Redirect to='/' />}
+              render={(props) => (this.state.loggedInStatus === LOGGED_IN && this.state.role === 'caregiver') ? <Caregiver {...props} setPatient={this.setPatient} caregiver_id={this.state.caregiver_id} formatDateFromUTCString={this.formatDateFromUTCString} /> : <Redirect to='/' />}
             />
             <Route
               path="/patient"

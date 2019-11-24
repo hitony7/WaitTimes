@@ -18,7 +18,6 @@ class Caregiver extends Component {
       text: '',
       currentVisit: {},
       showNotice: false,
-      caregiver_id: null
     }
   }
 
@@ -30,9 +29,9 @@ class Caregiver extends Component {
   handleReceiveNewText = (e) => {
     console.log(e);
     // console.log('test', e.caregiverID === this.state.caregiver_id);
-    if(e.visitId && e.waitTime && e.caregiverID === this.state.caregiver_id) {
+    if (e.visitId && e.waitTime && e.caregiverID === this.props.caregiver_id) {
       let now = new Date();
-      now.setMinutes( now.getMinutes() + Number(e.waitTime));
+      now.setMinutes(now.getMinutes() + Number(e.waitTime));
       const args = {
         message: `Case ${e.visitId} has been reviewed`,
         description:
@@ -63,28 +62,27 @@ class Caregiver extends Component {
       headers: { 'Authorization': "Bearer " + token }
     };
     axios
-    .get('/api/event', config) // let's grab the triage questions from the database
-    .then(response => {
-      // handle success
-      for (const item of response.data) { // let's do some date updating
-        item.event_date = this.props.formatDateFromUTCString(item.event_date);
-        item.assigned_timestamp = this.props.formatDateFromUTCString(item.assigned_timestamp);
-      }
-      this.setState({
-        isLoaded: true,
-        visits: response.data,
-        caregiver_id: response.data[0].caregiver_id ? response.data[0].caregiver_id : null
-      });
-    },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
+      .get('/api/event', config) // let's grab the triage questions from the database
+      .then(response => {
+        // handle success
+        for (const item of response.data) { // let's do some date updating
+          item.event_date = this.props.formatDateFromUTCString(item.event_date);
+          item.assigned_timestamp = this.props.formatDateFromUTCString(item.assigned_timestamp);
+        }
         this.setState({
           isLoaded: true,
-          error
+          visits: response.data
         });
-      });
+      },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        });
   }
 
   componentDidMount() {
