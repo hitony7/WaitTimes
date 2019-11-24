@@ -32,7 +32,7 @@ class Caregiver extends Component {
       const args = {
         message: `Case ${e.visitId} has been reviewed`,
         description:
-          `Your case has been assigned a wait time of ${e.waitTime} minutes with comment "${e.comment}". Please arrive at ${this.props.formatDateFromUTCString(now)}.`,
+          `Your case has been assigned a wait time of ${e.waitTime} minutes with comment "${e.comment}". Please come to the Alberta Children's Hospital at ${this.props.formatDateFromUTCString(now)}.`,
         duration: 0,
         className: 'red-notice'
       };
@@ -62,6 +62,7 @@ class Caregiver extends Component {
       // handle success
       for (const item of response.data) { // let's do some date updating
         item.event_date = this.props.formatDateFromUTCString(item.event_date);
+        item.assigned_timestamp = this.props.formatDateFromUTCString(item.assigned_timestamp);
       }
       this.setState({
         isLoaded: true,
@@ -118,12 +119,12 @@ class Caregiver extends Component {
         dataIndex: 'age',
       },
       {
-        title: 'Address',
-        dataIndex: 'address',
-      },
-      {
         title: 'Submission Date',
         dataIndex: 'event_date',
+      },
+      {
+        title: 'Wait Time Issued',
+        dataIndex: 'assigned_timestamp',
       },
       {
         title: 'Visit Description',
