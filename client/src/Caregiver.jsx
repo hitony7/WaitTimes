@@ -101,6 +101,10 @@ class Caregiver extends Component {
     const { error, isLoaded, visits } = this.state;
     const columns = [
       {
+        title: 'Case ID',
+        dataIndex: 'id'
+      },
+      {
         title: 'Patient Name',
         dataIndex: 'name'
       },
